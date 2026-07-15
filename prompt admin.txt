@@ -1,0 +1,1236 @@
+﻿Agis comme un architecte logiciel senior et un développeur full-stack spécialisé en React, TypeScript, Node.js, Express, MongoDB, Redux Toolkit, RTK Query et systèmes CMS.
+
+Je développe le site de la Fondation Bien Aimé Cassis.
+
+Le site contient déjà :
+
+- un frontend public en React ;
+- un espace utilisateur ;
+- un espace administrateur ;
+- un backend Node.js / Express ;
+- une base MongoDB ;
+- une authentification JWT avec access token et refresh token ;
+- des rôles administrateur et utilisateur.
+
+Je veux maintenant transformer l’espace administrateur en véritable CMS afin de pouvoir modifier tous les contenus du site public sans passer par le code source.
+
+==================================================
+1. OBJECTIF PRINCIPAL
+==================================================
+
+Créer dans l’espace administrateur une section appelée :
+
+“Gestion du contenu”
+
+Cette section doit permettre aux administrateurs autorisés de modifier :
+
+- les textes ;
+- les titres ;
+- les sous-titres ;
+- les descriptions ;
+- les images ;
+- les boutons ;
+- les liens ;
+- les statistiques ;
+- les programmes ;
+- les campagnes ;
+- les témoignages ;
+- les partenaires ;
+- les actualités ;
+- les événements ;
+- les coordonnées ;
+- les réseaux sociaux ;
+- les informations du footer ;
+- les métadonnées SEO ;
+- les traductions ;
+- les paramètres généraux du site.
+
+L’objectif est qu’un administrateur non développeur puisse gérer le contenu complet du site public depuis l’interface d’administration.
+
+==================================================
+2. CONTRAINTE IMPORTANTE
+==================================================
+
+Ne pas stocker les contenus importants directement dans les composants React.
+
+Le frontend public doit récupérer les contenus depuis l’API backend.
+
+Les composants React doivent afficher dynamiquement les données reçues depuis MongoDB.
+
+Prévoir des données de secours uniquement si l’API est temporairement indisponible.
+
+==================================================
+3. TECHNOLOGIES
+==================================================
+
+Frontend administrateur :
+
+- React ;
+- TypeScript ;
+- Vite ;
+- React Router ;
+- Redux Toolkit ;
+- RTK Query ;
+- Tailwind CSS ;
+- React Hook Form ;
+- Zod ;
+- TipTap ou React Quill pour l’éditeur de texte riche ;
+- Lucide React ;
+- Sonner pour les notifications ;
+- dnd-kit si un système de réorganisation par glisser-déposer est nécessaire.
+
+Backend :
+
+- Node.js ;
+- Express ;
+- TypeScript ;
+- MongoDB ;
+- Mongoose ;
+- JWT ;
+- Multer ;
+- Cloudinary ou Amazon S3 pour les images ;
+- Zod ou Joi ;
+- système RBAC ;
+- journaux d’audit ;
+- validation centralisée ;
+- gestion centralisée des erreurs.
+
+==================================================
+4. RÔLES ET PERMISSIONS
+==================================================
+
+Créer ou compléter les rôles suivants :
+
+- admin ;
+- super_admin ;
+- editor ;
+- media_manager ;
+- finance_manager.
+
+Permissions recommandées :
+
+EDITOR
+
+Peut :
+
+- modifier les pages ;
+- modifier les textes ;
+- publier les actualités ;
+- gérer les témoignages ;
+- gérer les événements.
+
+MEDIA_MANAGER
+
+Peut :
+
+- téléverser des images ;
+- remplacer des images ;
+- supprimer les médias ;
+- gérer les textes alternatifs ;
+- gérer la bibliothèque média.
+
+ADMIN
+
+Peut gérer tous les contenus publics.
+
+SUPER_ADMIN
+
+Peut aussi :
+
+- gérer les rôles ;
+- modifier les paramètres généraux ;
+- restaurer des versions ;
+- consulter les journaux d’audit ;
+- gérer les administrateurs.
+
+Le backend doit toujours vérifier les permissions.
+
+Ne pas se fier uniquement au frontend.
+
+==================================================
+5. MODULES À CRÉER DANS L’ADMINISTRATION
+==================================================
+
+Créer dans la sidebar administrateur :
+
+- Tableau de bord ;
+- Gestion du contenu ;
+- Pages ;
+- Sections de la page d’accueil ;
+- Programmes ;
+- Campagnes ;
+- Actualités ;
+- Événements ;
+- Témoignages ;
+- Partenaires ;
+- Statistiques d’impact ;
+- Bibliothèque média ;
+- Menus ;
+- Footer ;
+- Paramètres du site ;
+- SEO ;
+- Traductions ;
+- Historique des modifications.
+
+==================================================
+6. GESTION DES PAGES
+==================================================
+
+Créer une page :
+
+/admin/content/pages
+
+Afficher toutes les pages publiques :
+
+- Accueil ;
+- À propos ;
+- Mission ;
+- Vision ;
+- Valeurs ;
+- Programmes ;
+- Campagnes ;
+- Transparence ;
+- Actualités ;
+- Événements ;
+- Contact ;
+- FAQ ;
+- Bénévolat ;
+- Partenariat ;
+- Conditions d’utilisation ;
+- Politique de confidentialité ;
+- Protection de l’enfance.
+
+Chaque page doit avoir :
+
+- titre interne ;
+- slug ;
+- statut brouillon/publié ;
+- date de dernière modification ;
+- auteur de la dernière modification ;
+- langue ;
+- bouton modifier ;
+- bouton prévisualiser ;
+- bouton publier ;
+- bouton dupliquer ;
+- bouton restaurer une version.
+
+==================================================
+7. ÉDITEUR DE PAGE
+==================================================
+
+Créer une interface permettant de modifier chaque page.
+
+Champs possibles :
+
+- titre principal ;
+- sous-titre ;
+- texte introductif ;
+- contenu riche ;
+- image principale ;
+- image secondaire ;
+- texte alternatif ;
+- bouton principal ;
+- lien du bouton principal ;
+- bouton secondaire ;
+- lien du bouton secondaire ;
+- ordre des sections ;
+- activation/désactivation des sections ;
+- fond de section ;
+- couleur du texte ;
+- métadonnées SEO.
+
+Ne pas permettre l’injection de HTML non sécurisé.
+
+Sanitiser le contenu HTML produit par l’éditeur.
+
+==================================================
+8. GESTION DE LA PAGE D’ACCUEIL
+==================================================
+
+Créer un module spécifique :
+
+/admin/content/homepage
+
+Il doit permettre de gérer toutes les sections de la page d’accueil.
+
+SECTION HEADER
+
+Permettre de modifier :
+
+- logo ;
+- favicon ;
+- liens de navigation ;
+- ordre des liens ;
+- visibilité d’un lien ;
+- texte du bouton “Faire un don” ;
+- URL du bouton ;
+- comportement sticky ;
+- affichage du sélecteur de langue.
+
+SECTION HERO
+
+Permettre de modifier :
+
+- grand titre ;
+- mot ou fragment en orange ;
+- sous-titre ;
+- description ;
+- image ou vidéo de fond ;
+- overlay ;
+- texte du premier bouton ;
+- URL du premier bouton ;
+- texte du second bouton ;
+- URL du second bouton ;
+- statistiques affichées ;
+- visibilité de la section.
+
+SECTION ACTIONS RAPIDES
+
+Permettre de gérer :
+
+- Faire un don ;
+- Parrainer un enfant ;
+- Devenir bénévole ;
+- Devenir partenaire.
+
+Pour chaque carte :
+
+- icône ;
+- titre ;
+- description ;
+- lien ;
+- ordre ;
+- statut visible/invisible.
+
+SECTION À PROPOS
+
+Permettre de modifier :
+
+- titre ;
+- sous-titre ;
+- description ;
+- image ;
+- liste des valeurs ;
+- bouton ;
+- URL.
+
+SECTION STATISTIQUES
+
+Permettre de gérer dynamiquement :
+
+- titre ;
+- valeur ;
+- suffixe ;
+- icône ;
+- description ;
+- ordre ;
+- statut actif.
+
+Exemples :
+
+- enfants accompagnés ;
+- kits scolaires distribués ;
+- repas servis ;
+- bénévoles ;
+- écoles partenaires ;
+- communautés soutenues.
+
+SECTION PROGRAMMES
+
+Permettre de sélectionner les programmes affichés sur l’accueil.
+
+SECTION CAMPAGNES EN VEDETTE
+
+Permettre de sélectionner les campagnes à mettre en avant.
+
+SECTION UTILISATION DES DONS
+
+Permettre de modifier :
+
+- catégories ;
+- pourcentages ;
+- couleurs ;
+- descriptions ;
+- ordre.
+
+Vérifier que le total des pourcentages est égal à 100.
+
+SECTION TÉMOIGNAGES
+
+Permettre de sélectionner, ajouter, modifier ou masquer les témoignages.
+
+SECTION APPEL À L’ACTION
+
+Permettre de modifier :
+
+- titre ;
+- description ;
+- boutons ;
+- image de fond ;
+- couleur du fond.
+
+SECTION ACTUALITÉS
+
+Permettre de choisir les articles affichés.
+
+SECTION PARTENAIRES
+
+Permettre de gérer les logos et liens des partenaires.
+
+SECTION NEWSLETTER
+
+Permettre de modifier :
+
+- titre ;
+- description ;
+- texte du bouton ;
+- texte de consentement.
+
+SECTION FOOTER
+
+Permettre de gérer :
+
+- logo ;
+- description ;
+- adresses ;
+- téléphones ;
+- emails ;
+- réseaux sociaux ;
+- liens rapides ;
+- copyright ;
+- mentions légales.
+
+==================================================
+9. GESTION DES IMAGES
+==================================================
+
+Créer une bibliothèque média complète.
+
+Route :
+
+/admin/media
+
+Fonctionnalités :
+
+- téléverser une image ;
+- glisser-déposer ;
+- aperçu ;
+- recadrage ;
+- compression ;
+- remplacement ;
+- suppression ;
+- recherche ;
+- filtres ;
+- tri ;
+- dossiers ou catégories ;
+- copie de l’URL ;
+- texte alternatif ;
+- titre ;
+- légende ;
+- crédits photo ;
+- date d’ajout ;
+- utilisateur ayant téléversé le fichier.
+
+Formats autorisés :
+
+- JPG ;
+- JPEG ;
+- PNG ;
+- WebP ;
+- AVIF ;
+- SVG uniquement si sécurisé.
+
+Limiter :
+
+- taille maximale ;
+- dimensions maximales ;
+- types MIME.
+
+Générer automatiquement :
+
+- miniature ;
+- version mobile ;
+- version tablette ;
+- version desktop ;
+- version WebP ou AVIF.
+
+Utiliser Cloudinary ou un stockage compatible S3.
+
+Ne pas stocker de gros fichiers directement dans MongoDB.
+
+MongoDB doit uniquement stocker les métadonnées et les URL.
+
+==================================================
+10. MODÈLES MONGOOSE
+==================================================
+
+Créer au minimum les modèles suivants :
+
+SitePage
+
+Champs :
+
+- name ;
+- slug ;
+- title ;
+- status ;
+- locale ;
+- sections ;
+- seo ;
+- version ;
+- publishedAt ;
+- createdBy ;
+- updatedBy ;
+- createdAt ;
+- updatedAt.
+
+PageSection
+
+Peut être un sous-document ou un modèle séparé.
+
+Champs :
+
+- sectionKey ;
+- sectionType ;
+- title ;
+- subtitle ;
+- description ;
+- content ;
+- image ;
+- backgroundImage ;
+- buttons ;
+- items ;
+- styles ;
+- order ;
+- isVisible.
+
+Media
+
+Champs :
+
+- filename ;
+- originalName ;
+- url ;
+- publicId ;
+- mimeType ;
+- width ;
+- height ;
+- size ;
+- altText ;
+- title ;
+- caption ;
+- credits ;
+- folder ;
+- uploadedBy ;
+- createdAt.
+
+NavigationMenu
+
+Champs :
+
+- name ;
+- location ;
+- items ;
+- locale ;
+- isActive.
+
+SiteSetting
+
+Champs :
+
+- key ;
+- value ;
+- group ;
+- type ;
+- isPublic ;
+- updatedBy.
+
+ContentVersion
+
+Champs :
+
+- entityType ;
+- entityId ;
+- snapshot ;
+- version ;
+- createdBy ;
+- createdAt.
+
+AuditLog
+
+Champs :
+
+- user ;
+- action ;
+- entityType ;
+- entityId ;
+- changes ;
+- ipAddress ;
+- userAgent ;
+- createdAt.
+
+==================================================
+11. STRUCTURE FLEXIBLE DES SECTIONS
+==================================================
+
+Créer un système de sections dynamiques.
+
+Chaque section doit posséder :
+
+- un type ;
+- une clé unique ;
+- un ordre ;
+- un statut visible ;
+- un contenu configurable ;
+- une configuration de style limitée.
+
+Exemples de types :
+
+- hero ;
+- richText ;
+- imageText ;
+- statistics ;
+- programGrid ;
+- campaignGrid ;
+- testimonialSlider ;
+- partnerLogos ;
+- callToAction ;
+- newsletter ;
+- contactBlock ;
+- faq ;
+- gallery.
+
+Ne pas permettre à l’administrateur d’exécuter du JavaScript.
+
+Ne pas permettre l’ajout libre de code HTML dangereux.
+
+==================================================
+12. RÉORGANISATION DES SECTIONS
+==================================================
+
+Permettre à l’administrateur de réorganiser les sections par glisser-déposer.
+
+Ajouter :
+
+- poignée de déplacement ;
+- sauvegarde de l’ordre ;
+- bouton annuler ;
+- bouton enregistrer ;
+- retour visuel pendant le déplacement.
+
+Le frontend public doit respecter cet ordre.
+
+==================================================
+13. BROUILLON, PRÉVISUALISATION ET PUBLICATION
+==================================================
+
+Créer les statuts :
+
+- draft ;
+- review ;
+- published ;
+- archived.
+
+Workflow :
+
+1. l’administrateur modifie le contenu ;
+2. il enregistre un brouillon ;
+3. il prévisualise ;
+4. il publie ;
+5. la version publique est mise à jour.
+
+Créer une prévisualisation sécurisée avec un token temporaire.
+
+La prévisualisation ne doit pas être indexée par les moteurs de recherche.
+
+==================================================
+14. HISTORIQUE ET RESTAURATION
+==================================================
+
+Avant chaque modification importante :
+
+- créer une version du contenu ;
+- enregistrer l’auteur ;
+- enregistrer la date ;
+- enregistrer les champs modifiés.
+
+Créer une page :
+
+/admin/content/history
+
+Permettre :
+
+- voir les versions ;
+- comparer deux versions ;
+- restaurer une ancienne version ;
+- voir l’utilisateur responsable ;
+- voir la date et l’heure.
+
+Demander confirmation avant restauration.
+
+==================================================
+15. PROGRAMMES
+==================================================
+
+Créer une administration complète des programmes.
+
+Champs :
+
+- titre ;
+- slug ;
+- résumé ;
+- description complète ;
+- image ;
+- icône ;
+- objectifs ;
+- bénéficiaires ;
+- localisation ;
+- galerie ;
+- résultats ;
+- statut ;
+- ordre ;
+- SEO.
+
+Actions :
+
+- créer ;
+- modifier ;
+- publier ;
+- masquer ;
+- supprimer ;
+- dupliquer ;
+- mettre en vedette.
+
+==================================================
+16. CAMPAGNES
+==================================================
+
+Créer une administration complète des campagnes.
+
+Champs :
+
+- titre ;
+- slug ;
+- description courte ;
+- histoire complète ;
+- image principale ;
+- galerie ;
+- objectif financier ;
+- montant collecté ;
+- devise ;
+- date de début ;
+- date de fin ;
+- catégorie ;
+- programme associé ;
+- statut ;
+- campagne urgente ;
+- campagne mise en vedette ;
+- documents ;
+- mises à jour ;
+- SEO.
+
+Ne jamais modifier manuellement le montant collecté sans permission spécifique.
+
+Les montants doivent normalement être calculés depuis les dons confirmés.
+
+Prévoir éventuellement un ajustement administratif avec journal d’audit.
+
+==================================================
+17. ACTUALITÉS ET ÉVÉNEMENTS
+==================================================
+
+Créer un éditeur complet pour les articles.
+
+Champs :
+
+- titre ;
+- slug ;
+- extrait ;
+- contenu riche ;
+- image principale ;
+- galerie ;
+- auteur ;
+- catégorie ;
+- tags ;
+- statut ;
+- date de publication ;
+- SEO.
+
+Pour les événements :
+
+- titre ;
+- description ;
+- image ;
+- date ;
+- heure ;
+- lieu ;
+- carte ;
+- formulaire d’inscription ;
+- capacité ;
+- statut.
+
+==================================================
+18. TÉMOIGNAGES
+==================================================
+
+Permettre de gérer :
+
+- nom affiché ;
+- rôle ou relation avec la fondation ;
+- témoignage ;
+- photo ;
+- consentement ;
+- ordre ;
+- statut visible ;
+- langue.
+
+Pour les enfants :
+
+- ne jamais afficher le nom complet sans autorisation ;
+- permettre l’utilisation d’un prénom, d’initiales ou d’un pseudonyme ;
+- enregistrer la preuve de consentement ;
+- limiter l’accès au document de consentement.
+
+==================================================
+19. PARTENAIRES
+==================================================
+
+Permettre de gérer :
+
+- nom ;
+- logo ;
+- site web ;
+- description ;
+- type de partenaire ;
+- ordre ;
+- statut visible ;
+- date de partenariat.
+
+==================================================
+20. MENUS ET NAVIGATION
+==================================================
+
+Créer un gestionnaire de menu.
+
+Permettre :
+
+- ajout d’un lien ;
+- suppression ;
+- modification du texte ;
+- modification de l’URL ;
+- choix lien interne/externe ;
+- réorganisation ;
+- sous-menu ;
+- ouverture dans un nouvel onglet ;
+- visibilité selon la langue ;
+- activation/désactivation.
+
+Empêcher les URLs dangereuses.
+
+==================================================
+21. PARAMÈTRES GÉNÉRAUX
+==================================================
+
+Créer une page :
+
+/admin/settings/site
+
+Champs :
+
+- nom de la fondation ;
+- slogan ;
+- logo principal ;
+- logo clair ;
+- favicon ;
+- email principal ;
+- téléphone ;
+- adresse ;
+- pays ;
+- réseaux sociaux ;
+- devise par défaut ;
+- langue par défaut ;
+- langues actives ;
+- texte du bouton de don ;
+- mode maintenance ;
+- informations bancaires publiques ;
+- informations PayPal publiques ;
+- coordonnées Zelle ;
+- coordonnées Cash App ;
+- fuseau horaire.
+
+Ne jamais exposer :
+
+- secrets JWT ;
+- secrets PayPal ;
+- mot de passe MongoDB ;
+- clé privée Google ;
+- secrets Cloudinary ;
+- mots de passe SMTP.
+
+==================================================
+22. SEO
+==================================================
+
+Pour chaque page, permettre de modifier :
+
+- meta title ;
+- meta description ;
+- slug ;
+- image Open Graph ;
+- canonical URL ;
+- index/noindex ;
+- follow/nofollow ;
+- mots-clés si nécessaires ;
+- données structurées ;
+- texte alternatif des images.
+
+Afficher une prévisualisation Google simplifiée.
+
+==================================================
+23. MULTILINGUE
+==================================================
+
+Le contenu doit pouvoir être géré en :
+
+- français ;
+- créole haïtien ;
+- anglais.
+
+Créer :
+
+- onglets par langue ;
+- statut de traduction ;
+- bouton copier depuis le français ;
+- avertissement si une traduction manque ;
+- fallback sur la langue par défaut.
+
+Les traductions doivent être stockées proprement dans MongoDB.
+
+Choisir une approche cohérente :
+
+- champs localisés dans un même document ;
+ou
+- un document par langue.
+
+Expliquer le choix.
+
+==================================================
+24. API REST
+==================================================
+
+Créer des routes sécurisées.
+
+Pages :
+
+GET /api/content/pages
+GET /api/content/pages/:slug
+POST /api/admin/content/pages
+PATCH /api/admin/content/pages/:id
+DELETE /api/admin/content/pages/:id
+POST /api/admin/content/pages/:id/publish
+POST /api/admin/content/pages/:id/preview
+POST /api/admin/content/pages/:id/restore/:versionId
+
+Sections :
+
+POST /api/admin/content/pages/:id/sections
+PATCH /api/admin/content/pages/:id/sections/:sectionId
+DELETE /api/admin/content/pages/:id/sections/:sectionId
+PATCH /api/admin/content/pages/:id/sections/reorder
+
+Médias :
+
+GET /api/admin/media
+POST /api/admin/media
+PATCH /api/admin/media/:id
+DELETE /api/admin/media/:id
+
+Paramètres :
+
+GET /api/public/settings
+GET /api/admin/settings
+PATCH /api/admin/settings
+
+Menus :
+
+GET /api/public/navigation/:location
+GET /api/admin/navigation
+POST /api/admin/navigation
+PATCH /api/admin/navigation/:id
+
+Historique :
+
+GET /api/admin/content/history
+GET /api/admin/content/history/:entityType/:entityId
+POST /api/admin/content/history/:versionId/restore
+
+Toutes les routes administrateur doivent être protégées.
+
+==================================================
+25. FRONTEND PUBLIC
+==================================================
+
+Modifier le frontend public pour qu’il récupère dynamiquement :
+
+- le header ;
+- le menu ;
+- la page d’accueil ;
+- les pages ;
+- les programmes ;
+- les campagnes ;
+- les actualités ;
+- les témoignages ;
+- les partenaires ;
+- les paramètres publics ;
+- le footer.
+
+Utiliser RTK Query.
+
+Prévoir :
+
+- loading skeleton ;
+- erreur ;
+- contenu vide ;
+- cache ;
+- revalidation ;
+- invalidation après publication.
+
+Ne pas créer une requête par petit champ.
+
+Regrouper intelligemment les données d’une page.
+
+==================================================
+26. INTERFACE ADMINISTRATEUR
+==================================================
+
+Créer une interface claire avec :
+
+- sidebar ;
+- header ;
+- breadcrumb ;
+- formulaire en onglets ;
+- aperçu de l’image ;
+- sélection depuis la bibliothèque média ;
+- sauvegarde automatique facultative ;
+- bouton enregistrer ;
+- bouton enregistrer comme brouillon ;
+- bouton prévisualiser ;
+- bouton publier ;
+- indicateur de modifications non enregistrées.
+
+Demander confirmation avant de quitter une page avec des modifications non sauvegardées.
+
+==================================================
+27. VALIDATION
+==================================================
+
+Utiliser Zod côté frontend et backend.
+
+Valider :
+
+- titres ;
+- URLs ;
+- slugs ;
+- tailles d’images ;
+- types de fichiers ;
+- dates ;
+- couleurs ;
+- pourcentages ;
+- ordre ;
+- statuts ;
+- langues ;
+- liens externes.
+
+Afficher des messages d’erreur clairs en français.
+
+==================================================
+28. SÉCURITÉ
+==================================================
+
+Ajouter :
+
+- contrôle RBAC ;
+- validation serveur ;
+- sanitisation HTML ;
+- limitation du téléversement ;
+- vérification MIME ;
+- rate limiting ;
+- journal d’audit ;
+- protection CSRF si nécessaire ;
+- cookies sécurisés ;
+- vérification du propriétaire des actions ;
+- protection contre les URLs malveillantes ;
+- suppression sécurisée des médias ;
+- prévention des références cassées ;
+- sauvegarde avant suppression.
+
+Ne jamais accepter directement du code JavaScript depuis l’administration.
+
+==================================================
+29. RESPONSIVE
+==================================================
+
+L’interface d’administration doit être responsive sur :
+
+- desktop ;
+- tablette ;
+- smartphone.
+
+Sur mobile :
+
+- sidebar en drawer ;
+- formulaires en une colonne ;
+- boutons principaux visibles ;
+- tableaux transformés en cartes ou scrollables ;
+- bibliothèque média adaptée ;
+- éditeur de texte utilisable.
+
+==================================================
+30. LIVRABLES ATTENDUS
+==================================================
+
+Fournir :
+
+1. architecture frontend ;
+2. architecture backend ;
+3. modèles Mongoose ;
+4. routes API ;
+5. contrôleurs ;
+6. services ;
+7. middlewares ;
+8. validations ;
+9. RTK Query APIs ;
+10. pages administrateur ;
+11. formulaires complets ;
+12. bibliothèque média ;
+13. upload Cloudinary ;
+14. édition de la page d’accueil ;
+15. édition des pages ;
+16. menus ;
+17. footer ;
+18. paramètres ;
+19. SEO ;
+20. traductions ;
+21. historique ;
+22. système brouillon/publication ;
+23. prévisualisation ;
+24. responsive ;
+25. tests essentiels ;
+26. fichier .env.example ;
+27. README ;
+28. instructions de migration des contenus statiques vers MongoDB.
+
+==================================================
+31. MÉTHODE DE RÉALISATION
+==================================================
+
+Ne génère pas toute l’application en un seul fichier.
+
+Travaille en phases.
+
+PHASE 1
+
+- analyser le frontend public existant ;
+- identifier tous les contenus statiques ;
+- dresser la liste des pages et sections ;
+- proposer les modèles MongoDB ;
+- proposer la structure API ;
+- proposer la stratégie multilingue.
+
+PHASE 2
+
+- créer les modèles ;
+- créer les routes ;
+- créer les services ;
+- créer la gestion des permissions ;
+- créer les paramètres publics.
+
+PHASE 3
+
+- créer la bibliothèque média ;
+- intégrer Cloudinary ;
+- sécuriser les téléversements.
+
+PHASE 4
+
+- créer l’interface de gestion de la page d’accueil ;
+- modifier le frontend public pour utiliser l’API.
+
+PHASE 5
+
+- créer la gestion des pages ;
+- actualités ;
+- programmes ;
+- campagnes ;
+- témoignages ;
+- partenaires.
+
+PHASE 6
+
+- brouillon ;
+- prévisualisation ;
+- publication ;
+- historique ;
+- restauration.
+
+PHASE 7
+
+- multilingue ;
+- SEO ;
+- tests ;
+- responsive ;
+- documentation.
+
+Pour chaque phase :
+
+- expliquer brièvement les choix ;
+- fournir les commandes ;
+- fournir l’arborescence ;
+- générer les fichiers complets ;
+- vérifier les imports ;
+- vérifier les types ;
+- éviter le pseudo-code ;
+- indiquer comment tester.
+
+==================================================
+32. PREMIÈRE TÂCHE
+==================================================
+
+Commence par analyser mon projet actuel.
+
+Demande-moi les fichiers nécessaires, notamment :
+
+Frontend :
+
+- src/App.tsx ;
+- src/routes ;
+- src/components/layout/Header.tsx ;
+- src/components/layout/Footer.tsx ;
+- src/pages/HomePage.tsx ;
+- src/pages/AboutPage.tsx ;
+- src/services/baseApi.ts ;
+- src/app/store.ts.
+
+Backend :
+
+- src/server.ts ou src/app.ts ;
+- src/routes ;
+- src/controllers ;
+- src/models ;
+- src/middleware/auth.middleware.ts ;
+- src/middleware/role.middleware.ts ;
+- src/config ;
+- package.json.
+
+Ensuite, fournis uniquement :
+
+1. l’audit des contenus actuellement codés en dur ;
+2. la liste des données qui doivent devenir administrables ;
+3. les modèles MongoDB recommandés ;
+4. les endpoints nécessaires ;
+5. l’arborescence du module CMS ;
+6. le plan de migration ;
+7. les risques techniques ;
+8. l’ordre de réalisation.
+
+Ne commence pas encore à générer tout le code avant validation de cette architecture.

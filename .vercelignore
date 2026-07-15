@@ -1,0 +1,9 @@
+backend
+dist
+node_modules
+.git
+.DS_Store
+.~lock*
+Prompt pour la realisation du site de la FFondation Bien Aime Cassis.rtf
+prompt admin.txt
+FondationBienAimeCassis.txt
