@@ -3,6 +3,19 @@ import type { NewsItem, NewsPayload } from './newsTypes'
 
 export const newsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
+    getPublicNews: builder.query<NewsItem[], void>({
+      query: () => ({
+        url: '/news',
+        method: 'GET',
+      }),
+      providesTags: (result) =>
+        result
+          ? [
+              { type: 'NewsList', id: 'PUBLIC' },
+              ...result.map((newsItem) => ({ type: 'News' as const, id: newsItem._id })),
+            ]
+          : [{ type: 'NewsList', id: 'PUBLIC' }],
+    }),
     getAdminNews: builder.query<NewsItem[], void>({
       query: () => ({
         url: '/news/admin/all',
@@ -49,6 +62,7 @@ export const newsApi = baseApi.injectEndpoints({
 })
 
 export const {
+  useGetPublicNewsQuery,
   useGetAdminNewsQuery,
   useCreateNewsMutation,
   useUpdateNewsMutation,

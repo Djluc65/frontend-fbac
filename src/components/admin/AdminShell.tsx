@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { LayoutDashboard, Megaphone, Newspaper, LogOut } from 'lucide-react'
+import { LayoutDashboard, Megaphone, Newspaper, FilePenLine, LogOut } from 'lucide-react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import Button from '../common/Button'
+import BrandLogo from '../common/BrandLogo'
 import { useAppSelector } from '../../app/hooks'
 import { useLogoutMutation } from '../../features/auth/authApi'
 import { selectCurrentUser } from '../../features/auth/authSelectors'
@@ -35,6 +36,7 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
   const permissions = user?.permissions ?? []
   const canManageCampaigns = hasPermission(permissions, ['campaigns.manage'])
   const canManagePublications = hasPermission(permissions, ['news.create', 'news.update', 'news.delete'])
+  const canManageContent = hasPermission(permissions, ['content.manage'])
 
   const navigationItems = [
     {
@@ -42,6 +44,12 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
       label: 'Tableau de bord',
       icon: LayoutDashboard,
       visible: true,
+    },
+    {
+      to: '/admin/contenu',
+      label: 'Gestion du contenu',
+      icon: FilePenLine,
+      visible: canManageContent,
     },
     {
       to: '/admin/campagnes',
@@ -78,6 +86,11 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
           <section className="overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 to-orange-700 p-6 text-white shadow-panel sm:p-8">
             <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
               <div className="space-y-4">
+                <BrandLogo
+                  to="/"
+                  className="inline-flex max-w-full"
+                  imageClassName="max-w-[180px] sm:max-w-[220px]"
+                />
                 <div className="inline-flex w-fit items-center rounded-full bg-white/15 px-4 py-2 text-sm font-medium">
                   Administration sécurisée
                 </div>
@@ -112,6 +125,12 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
 
           <section className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <aside className="h-fit rounded-3xl bg-white p-4 shadow-panel">
+              <BrandLogo
+                to="/"
+                className="mb-4 inline-flex max-w-full px-3"
+                imageClassName="max-w-[170px]"
+                loading="lazy"
+              />
               <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                 Navigation
               </p>

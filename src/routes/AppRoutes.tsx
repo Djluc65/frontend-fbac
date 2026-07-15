@@ -12,6 +12,7 @@ import Login from '../pages/auth/Login'
 import Register from '../pages/auth/Register'
 import AdminDashboardPage from '../pages/admin/AdminDashboardPage'
 import AdminCampaignsPage from '../pages/admin/AdminCampaignsPage'
+import AdminContentPage from '../pages/admin/AdminContentPage'
 import AdminLoginPage from '../pages/auth/AdminLoginPage'
 import AdminNewsPage from '../pages/admin/AdminNewsPage'
 import AdminRoute from './AdminRoute'
@@ -34,6 +35,7 @@ const AppRoutes = () => {
       >
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboardPage />} />
+        <Route path="contenu" element={<AdminContentPage />} />
         <Route path="campagnes" element={<AdminCampaignsPage />} />
         <Route path="publications" element={<AdminNewsPage />} />
       </Route>

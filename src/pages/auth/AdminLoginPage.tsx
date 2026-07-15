@@ -7,6 +7,7 @@ import { Eye, EyeOff, Lock, Mail, ShieldCheck } from 'lucide-react'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import Button from '../../components/common/Button'
+import BrandLogo from '../../components/common/BrandLogo'
 import Input from '../../components/common/Input'
 import { useAppSelector } from '../../app/hooks'
 import { useLoginMutation, useLogoutMutation } from '../../features/auth/authApi'
@@ -102,10 +103,11 @@ const AdminLoginPage = () => {
       <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-100 px-4 py-10">
         <div className="grid w-full max-w-6xl overflow-hidden rounded-3xl bg-white shadow-panel lg:grid-cols-[1.1fr_0.9fr]">
           <section className="hidden bg-gradient-to-br from-orange-600 to-orange-700 p-10 text-white lg:flex lg:flex-col lg:justify-between">
-            <div className="inline-flex w-fit items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-sm font-medium">
-              <ShieldCheck className="h-4 w-4" />
-              Fondation Bien Aimé Cassis
-            </div>
+            <BrandLogo
+              to="/"
+              className="inline-flex max-w-full"
+              imageClassName="max-w-[220px]"
+            />
 
             <div className="space-y-6">
               <div>
@@ -133,8 +135,13 @@ const AdminLoginPage = () => {
               <div className="mb-8 space-y-3">
                 <div className="inline-flex items-center gap-2 rounded-full bg-orange-100 px-4 py-2 text-sm font-medium text-orange-700 lg:hidden">
                   <ShieldCheck className="h-4 w-4" />
-                  Fondation Bien Aimé Cassis
+                Espace administration
                 </div>
+              <BrandLogo
+                to="/"
+                className="inline-flex max-w-full lg:hidden"
+                imageClassName="max-w-[180px] sm:max-w-[220px]"
+              />
                 <h2 className="font-display text-3xl font-bold text-slate-900">
                   Connexion administrateur
                 </h2>

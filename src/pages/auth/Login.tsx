@@ -7,6 +7,7 @@ import * as z from 'zod'
 import { Mail, Lock, Eye, EyeOff, LogIn } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
+import BrandLogo from '../../components/common/BrandLogo'
 
 const formSchema = z.object({
   email: z.string().email('Veuillez entrer un email valide'),
@@ -40,9 +41,14 @@ const Login = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md"
+          className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl sm:p-8"
         >
           <div className="text-center mb-8">
+            <BrandLogo
+              to="/"
+              className="mb-5 inline-flex max-w-full justify-center"
+              imageClassName="max-w-[170px] sm:max-w-[210px]"
+            />
             <h1 className="font-display text-3xl font-bold text-soft-black mb-2">Connexion</h1>
             <p className="text-gray-600">Accédez à votre espace personnel</p>
           </div>

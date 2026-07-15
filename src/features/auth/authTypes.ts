@@ -36,6 +36,7 @@ export const canAccessAdminPanel = (user: AuthUser | null | undefined) => {
   return (
     ADMIN_PANEL_ROLES.includes(user.role as (typeof ADMIN_PANEL_ROLES)[number]) ||
     permissions.includes('*') ||
+    permissions.includes('content.manage') ||
     permissions.includes('staff.manage') ||
     permissions.includes('dashboard.read')
   )

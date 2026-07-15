@@ -1,22 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
-import Logo from '../../logo/logo1-remove-background.png'
+import DefaultLogo from '../../logo/logo1-remove-background.png'
+import { useSiteContent } from '../features/siteContent/useSiteContent'
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
   const mobileMenuId = 'mobile-navigation'
+  const { content } = useSiteContent()
 
-  const navLinks = [
-    { path: '/', label: 'Accueil' },
-    { path: '/a-propos', label: 'À propos' },
-    { path: '/programmes', label: 'Programmes' },
-    { path: '/campagnes', label: 'Campagnes' },
-    { path: '/actualites', label: 'Actualités' },
-    { path: '/transparence', label: 'Transparence' },
-    { path: '/contact', label: 'Contact' },
-  ]
+  const navLinks = content.navbar.links
+  const logoSrc = content.navbar.logoUrl || DefaultLogo
 
   useEffect(() => {
     setIsMenuOpen(false)
@@ -43,16 +38,16 @@ const Navbar = () => {
           <Link
             to="/"
             className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:flex-none"
-            aria-label="Fondation Bien Aimé Cassis"
+            aria-label={content.navbar.siteName}
           >
             <img
-              src={Logo}
-              alt="Fondation Bien Aimé Cassis"
+              src={logoSrc}
+              alt={content.navbar.siteName}
               loading="eager"
               className="h-10 w-auto flex-shrink-0 object-contain sm:h-12 lg:h-14 xl:h-16"
             />
             <span className="hidden min-w-0 font-display text-sm font-bold leading-tight text-orange-500 sm:block lg:text-base xl:text-lg">
-              Fondation Bien Aimé Cassis
+              {content.navbar.siteName}
             </span>
           </Link>
 
@@ -75,10 +70,10 @@ const Navbar = () => {
 
           <div className="hidden flex-shrink-0 xl:block">
             <Link
-              to="/faire-un-don"
+              to={content.navbar.donateLink}
               className="inline-flex w-auto min-w-max items-center justify-center whitespace-nowrap rounded-full bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-md transition-colors hover:bg-orange-600 hover:shadow-lg 2xl:px-6 2xl:py-3 2xl:text-base"
             >
-              Faire un don
+              {content.navbar.donateLabel}
             </Link>
           </div>
 
@@ -113,11 +108,11 @@ const Navbar = () => {
                 </Link>
               ))}
               <Link
-                to="/faire-un-don"
+                to={content.navbar.donateLink}
                 onClick={() => setIsMenuOpen(false)}
                 className="mt-4 inline-flex w-full items-center justify-center whitespace-nowrap rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition-colors hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
               >
-                Faire un don
+                {content.navbar.donateLabel}
               </Link>
             </nav>
           </div>

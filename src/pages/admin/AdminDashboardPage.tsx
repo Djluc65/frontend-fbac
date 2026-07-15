@@ -1,4 +1,4 @@
-import { FolderKanban, Megaphone, Newspaper, ShieldCheck, UserCircle2 } from 'lucide-react'
+import { FilePenLine, FolderKanban, Megaphone, Newspaper, ShieldCheck, UserCircle2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import AdminShell from '../../components/admin/AdminShell'
 import { useAppSelector } from '../../app/hooks'
@@ -21,8 +21,16 @@ const AdminDashboardPage = () => {
   const permissions = user?.permissions ?? []
   const canManageCampaigns = hasPermission(permissions, ['campaigns.manage'])
   const canManagePublications = hasPermission(permissions, ['news.create', 'news.update', 'news.delete'])
+  const canManageContent = hasPermission(permissions, ['content.manage'])
 
   const quickAccess = [
+    {
+      title: 'Gérer le contenu du site',
+      description: 'Modifier les textes, la rubrique Notre équipe, le footer, le header et les pages statiques du site public.',
+      to: '/admin/contenu',
+      icon: FilePenLine,
+      visible: canManageContent,
+    },
     {
       title: 'Gérer les campagnes',
       description: 'Créer, modifier et supprimer les campagnes de collecte avec image, montant cible et dates.',

@@ -1,135 +1,136 @@
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
-import { Heart, BookOpen, Utensils, Shirt, Award, ArrowRight, CheckCircle2 } from 'lucide-react'
+import {
+  Heart,
+  BookOpen,
+  Utensils,
+  Shirt,
+  Award,
+  ArrowRight,
+  CheckCircle2,
+} from 'lucide-react'
 import { motion } from 'framer-motion'
+import { useGetCampaignsQuery } from '../features/campaigns/campaignApi'
+import { useSiteContent } from '../features/siteContent/useSiteContent'
+
+const programIcons = [BookOpen, Utensils, Shirt, Award]
 
 const Home = () => {
-  const stats = [
-    { number: '250', label: 'Enfants accompagnés' },
-    { number: '1 200', label: 'Kits distribués' },
-    { number: '35 000', label: 'Repas servis' },
-    { number: '80', label: 'Bénévoles' },
-  ]
-
-  const programs = [
-    { icon: BookOpen, title: 'Parrainage scolaire', description: 'Financer les frais de scolarité, les livres et les fournitures pour les enfants défavorisés.' },
-    { icon: Utensils, title: 'Programme alimentaire', description: 'Offrir un repas par jour aux élèves pour favoriser leur concentration et leur santé.' },
-    { icon: Shirt, title: 'Vêtements et chaussures', description: 'Distribuer des uniformes, des vêtements et des chaussures adaptés.' },
-    { icon: Award, title: 'Excellence scolaire', description: 'Récompenser les élèves méritants avec des bourses et des encouragements.' },
-  ]
-
-  const campaigns = [
-    { id: 1, title: 'Une rentrée scolaire pour 100 enfants', raised: 4500, goal: 6000, image: 'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=600&h=400&fit=crop' },
-    { id: 2, title: '500 kits scolaires pour les communautés vulnérables', raised: 3200, goal: 5000, image: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&h=400&fit=crop' },
-    { id: 3, title: 'Un repas par jour pour 200 élèves', raised: 5800, goal: 8000, image: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=600&h=400&fit=crop' },
-  ]
+  const { content } = useSiteContent()
+  const { data: campaigns = [] } = useGetCampaignsQuery()
+  const featuredCampaigns = campaigns.slice(0, 3)
 
   return (
     <>
       <Helmet>
-        <title>Fondation Bien Aimé Cassis - Accueil</title>
-        <meta name="description" content="Nous aidons les enfants vulnérables d'Haïti à accéder à l'école, à une alimentation suffisante et aux ressources nécessaires à leur développement." />
+        <title>{content.home.seoTitle}</title>
+        <meta name="description" content={content.home.seoDescription} />
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-50 to-orange-100 overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 to-orange-100">
+        <div className="absolute inset-0 bg-black/10" />
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 lg:py-32">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-extrabold text-soft-black leading-tight mb-6">
-                L'éducation, la dignité et l'espoir pour{' '}
-                <span className="text-orange-500">chaque enfant</span>
+              <h1 className="mb-6 font-display text-4xl font-extrabold leading-tight text-soft-black md:text-5xl lg:text-6xl">
+                {content.home.hero.titlePrefix}{' '}
+                <span className="text-orange-500">{content.home.hero.titleHighlight}</span>
               </h1>
-              <p className="text-lg text-gray-600 mb-8 max-w-xl">
-                Nous aidons les enfants vulnérables d'Haïti à accéder à l'école, à une alimentation suffisante, aux livres, aux vêtements et aux fournitures nécessaires à leur développement.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <p className="mb-8 max-w-xl text-lg text-gray-600">{content.home.hero.description}</p>
+              <div className="flex flex-col gap-4 sm:flex-row">
                 <Link
-                  to="/faire-un-don"
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  to={content.home.hero.primaryButtonLink}
+                  className="flex items-center justify-center gap-2 rounded-full bg-orange-500 px-8 py-4 text-lg font-semibold text-white shadow-lg transition-all hover:bg-orange-600 hover:shadow-xl"
                 >
-                  Faire un don
-                  <ArrowRight className="w-5 h-5" />
+                  {content.home.hero.primaryButtonLabel}
+                  <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
-                  to="/a-propos"
-                  className="bg-white hover:bg-gray-50 text-soft-black px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-md hover:shadow-lg border border-gray-200"
+                  to={content.home.hero.secondaryButtonLink}
+                  className="rounded-full border border-gray-200 bg-white px-8 py-4 text-center text-lg font-semibold text-soft-black shadow-md transition-all hover:bg-gray-50 hover:shadow-lg"
                 >
-                  En savoir plus
+                  {content.home.hero.secondaryButtonLabel}
                 </Link>
               </div>
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative"
             >
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl">
+              <div className="relative z-10 overflow-hidden rounded-2xl shadow-2xl">
                 <img
-                  src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&h=600&fit=crop"
-                  alt="Enfants apprenant en classe"
-                  className="w-full h-auto"
+                  src={content.home.hero.imageUrl}
+                  alt={content.home.hero.imageAlt}
+                  className="h-auto w-full"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-orange-400 rounded-full opacity-30"></div>
-              <div className="absolute -top-6 -right-6 w-48 h-48 bg-orange-200 rounded-full opacity-40"></div>
+              <div className="absolute -bottom-6 -left-6 h-32 w-32 rounded-full bg-orange-400 opacity-30" />
+              <div className="absolute -right-6 -top-6 h-48 w-48 rounded-full bg-orange-200 opacity-40" />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat, index) => (
+      <section className="bg-white py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+            {content.home.stats.map((stat, index) => (
               <motion.div
-                key={index}
+                key={`${stat.label}-${index}`}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <div className="font-display text-4xl md:text-5xl font-extrabold text-orange-500 mb-2">{stat.number}</div>
-                <div className="text-gray-600 font-medium">{stat.label}</div>
+                <div className="mb-2 font-display text-4xl font-extrabold text-orange-500 md:text-5xl">
+                  {stat.value}
+                </div>
+                <div className="font-medium text-gray-600">{stat.label}</div>
               </motion.div>
             ))}
           </div>
-          <p className="text-center text-gray-400 text-sm mt-6">* Données de démonstration</p>
+          <p className="mt-6 text-center text-sm text-gray-400">{content.home.statsDisclaimer}</p>
         </div>
       </section>
 
-      {/* Programs Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-soft-black mb-4">Nos programmes</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">Nous intervenons sur plusieurs axes pour assurer le bien-être et l'éducation des enfants.</p>
+      <section className="bg-gray-50 py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-16 text-center">
+            <h2 className="mb-4 font-display text-3xl font-bold text-soft-black md:text-4xl">
+              {content.home.programsSection.title}
+            </h2>
+            <p className="mx-auto max-w-2xl text-gray-600">
+              {content.home.programsSection.description}
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {programs.map((program, index) => {
-              const Icon = program.icon
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+            {content.home.programsSection.items.map((program, index) => {
+              const Icon = programIcons[index % programIcons.length]
+
               return (
                 <motion.div
-                  key={index}
+                  key={`${program.title}-${index}`}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   viewport={{ once: true }}
-                  className="bg-white p-8 rounded-2xl shadow-md hover:shadow-xl transition-shadow"
+                  className="rounded-2xl bg-white p-8 shadow-md transition-shadow hover:shadow-xl"
                 >
-                  <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mb-6">
-                    <Icon className="w-8 h-8 text-orange-500" />
+                  <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-orange-100">
+                    <Icon className="h-8 w-8 text-orange-500" />
                   </div>
-                  <h3 className="font-display font-semibold text-xl text-soft-black mb-3">{program.title}</h3>
+                  <h3 className="mb-3 font-display text-xl font-semibold text-soft-black">
+                    {program.title}
+                  </h3>
                   <p className="text-gray-600">{program.description}</p>
                 </motion.div>
               )
@@ -138,59 +139,68 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Campaigns Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center mb-12">
+      <section className="bg-white py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-12 flex items-center justify-between">
             <div>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-soft-black mb-4">Nos campagnes</h2>
-              <p className="text-gray-600">Participez à nos collectes pour faire une différence.</p>
+              <h2 className="mb-4 font-display text-3xl font-bold text-soft-black md:text-4xl">
+                {content.home.campaignsSection.title}
+              </h2>
+              <p className="text-gray-600">{content.home.campaignsSection.description}</p>
             </div>
             <Link
-              to="/campagnes"
-              className="hidden md:flex items-center gap-2 text-orange-500 font-semibold hover:text-orange-600"
+              to={content.home.campaignsSection.allCampaignsLink}
+              className="hidden items-center gap-2 font-semibold text-orange-500 hover:text-orange-600 md:flex"
             >
-              Voir toutes les campagnes
-              <ArrowRight className="w-5 h-5" />
+              {content.home.campaignsSection.allCampaignsLabel}
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {campaigns.map((campaign, index) => (
+          <div className="grid gap-8 md:grid-cols-3">
+            {featuredCampaigns.map((campaign, index) => (
               <motion.div
-                key={campaign.id}
+                key={campaign._id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden group"
+                className="group overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-xl"
               >
                 <div className="relative overflow-hidden">
                   <img
                     src={campaign.image}
                     alt={campaign.title}
-                    className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                    className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="font-display font-semibold text-xl text-soft-black mb-4">{campaign.title}</h3>
+                  <h3 className="mb-4 font-display text-xl font-semibold text-soft-black">
+                    {campaign.title}
+                  </h3>
                   <div className="mb-4">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-orange-500 font-semibold">{campaign.raised.toLocaleString()} $ collectés</span>
-                      <span className="text-gray-500">Objectif: {campaign.goal.toLocaleString()} $</span>
+                    <div className="mb-2 flex justify-between text-sm">
+                      <span className="font-semibold text-orange-500">
+                        {campaign.raisedAmount.toLocaleString()} $ collectés
+                      </span>
+                      <span className="text-gray-500">
+                        Objectif: {campaign.goalAmount.toLocaleString()} $
+                      </span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className="h-2.5 w-full rounded-full bg-gray-200">
                       <div
-                        className="bg-orange-500 h-2.5 rounded-full transition-all duration-1000"
-                        style={{ width: `${Math.min((campaign.raised / campaign.goal) * 100, 100)}%` }}
-                      ></div>
+                        className="h-2.5 rounded-full bg-orange-500 transition-all duration-1000"
+                        style={{
+                          width: `${Math.min((campaign.raisedAmount / campaign.goalAmount) * 100, 100)}%`,
+                        }}
+                      />
                     </div>
                   </div>
                   <Link
-                    to="/faire-un-don"
-                    className="block w-full text-center bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold transition-colors"
+                    to={content.home.campaignsSection.donateLink}
+                    className="block w-full rounded-xl bg-orange-500 py-3 text-center font-semibold text-white transition-colors hover:bg-orange-600"
                   >
-                    Faire un don
+                    {content.home.campaignsSection.donateLabel}
                   </Link>
                 </div>
               </motion.div>
@@ -199,81 +209,72 @@ const Home = () => {
 
           <div className="mt-8 text-center md:hidden">
             <Link
-              to="/campagnes"
-              className="inline-flex items-center gap-2 text-orange-500 font-semibold hover:text-orange-600"
+              to={content.home.campaignsSection.allCampaignsLink}
+              className="inline-flex items-center gap-2 font-semibold text-orange-500 hover:text-orange-600"
             >
-              Voir toutes les campagnes
-              <ArrowRight className="w-5 h-5" />
+              {content.home.campaignsSection.allCampaignsLabel}
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-500 to-orange-600">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-20">
+        <div className="mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Heart className="w-16 h-16 text-white mx-auto mb-6" />
-            <h2 className="font-display text-3xl md:text-4xl font-bold text-white mb-6">
-              Ensemble, nous pouvons changer des vies
+            <Heart className="mx-auto mb-6 h-16 w-16 text-white" />
+            <h2 className="mb-6 font-display text-3xl font-bold text-white md:text-4xl">
+              {content.home.ctaSection.title}
             </h2>
-            <p className="text-orange-100 text-lg mb-8 max-w-2xl mx-auto">
-              Chaque don, petit ou grand, contribue à offrir un avenir meilleur à un enfant en Haïti. Rejoignez-nous dans cette mission de solidarité.
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-orange-100">
+              {content.home.ctaSection.description}
             </p>
             <Link
-              to="/faire-un-don"
-              className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-orange-500 px-10 py-4 rounded-full font-semibold text-lg transition-all shadow-lg"
+              to={content.home.ctaSection.buttonLink}
+              className="inline-flex items-center gap-2 rounded-full bg-white px-10 py-4 text-lg font-semibold text-orange-500 shadow-lg transition-all hover:bg-gray-100"
             >
-              Devenez un donateur aujourd'hui
-              <ArrowRight className="w-5 h-5" />
+              {content.home.ctaSection.buttonLabel}
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </motion.div>
         </div>
       </section>
 
-      {/* Trust Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="bg-gray-50 py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-soft-black mb-6">
-                Pourquoi nous faire confiance ?
+              <h2 className="mb-6 font-display text-3xl font-bold text-soft-black md:text-4xl">
+                {content.home.trustSection.title}
               </h2>
-              <p className="text-gray-600 mb-8">
-                La transparence et l'intégrité sont au cœur de notre action. Nous nous engageons à utiliser chaque don de manière responsable et à rendre compte de nos actions.
-              </p>
+              <p className="mb-8 text-gray-600">{content.home.trustSection.description}</p>
               <ul className="space-y-4">
-                {[
-                  '100% des dons dédiés aux programmes',
-                  'Rapports financiers publics',
-                  'Équipe locale engagée',
-                  'Partenariats avec des écoles vérifiées',
-                  'Suivi individuel des bénéficiaires',
-                ].map((item, index) => (
-                  <li key={index} className="flex items-center gap-3">
-                    <CheckCircle2 className="w-6 h-6 text-orange-500 flex-shrink-0" />
+                {content.home.trustSection.items.map((item, index) => (
+                  <li key={`${item}-${index}`} className="flex items-center gap-3">
+                    <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-orange-500" />
                     <span className="text-gray-700">{item}</span>
                   </li>
                 ))}
               </ul>
               <Link
-                to="/transparence"
-                className="inline-flex items-center gap-2 mt-8 text-orange-500 font-semibold hover:text-orange-600"
+                to={content.home.trustSection.reportLink}
+                className="mt-8 inline-flex items-center gap-2 font-semibold text-orange-500 hover:text-orange-600"
               >
-                Voir nos rapports
-                <ArrowRight className="w-5 h-5" />
+                {content.home.trustSection.reportLabel}
+                <ArrowRight className="h-5 w-5" />
               </Link>
             </motion.div>
+
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -282,8 +283,8 @@ const Home = () => {
               className="relative"
             >
               <img
-                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&h=500&fit=crop"
-                alt="Équipe de la fondation"
+                src={content.home.trustSection.imageUrl}
+                alt={content.home.trustSection.imageAlt}
                 className="rounded-2xl shadow-2xl"
               />
             </motion.div>

@@ -7,6 +7,7 @@ import * as z from 'zod'
 import { User, Mail, Lock, Eye, EyeOff, UserPlus, CheckCircle2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { toast } from 'sonner'
+import BrandLogo from '../../components/common/BrandLogo'
 
 const formSchema = z.object({
   firstName: z.string().min(2, 'Le prénom doit contenir au moins 2 caractères'),
@@ -50,8 +51,13 @@ const Register = () => {
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md text-center"
+            className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-xl sm:p-8"
           >
+            <BrandLogo
+              to="/"
+              className="mb-5 inline-flex max-w-full justify-center"
+              imageClassName="max-w-[170px] sm:max-w-[210px]"
+            />
             <div className="w-20 h-20 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 className="w-10 h-10 text-white" />
             </div>
@@ -81,14 +87,19 @@ const Register = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md"
+          className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl sm:p-8"
         >
           <div className="text-center mb-8">
+            <BrandLogo
+              to="/"
+              className="mb-5 inline-flex max-w-full justify-center"
+              imageClassName="max-w-[170px] sm:max-w-[210px]"
+            />
             <h1 className="font-display text-3xl font-bold text-soft-black mb-2">Créer un compte</h1>
             <p className="text-gray-600">Rejoignez notre communauté de donateurs</p>
           </div>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">Prénom</label>
                 <div className="relative">
