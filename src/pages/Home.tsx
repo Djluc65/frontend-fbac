@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import {
-  Heart,
   BookOpen,
   Utensils,
   Shirt,
@@ -12,6 +11,7 @@ import {
 import { motion } from 'framer-motion'
 import { useGetCampaignsQuery } from '../features/campaigns/campaignApi'
 import { useSiteContent } from '../features/siteContent/useSiteContent'
+import CtaLogo from '../../logo/logo4-removebg.png'
 
 const programIcons = [BookOpen, Utensils, Shirt, Award]
 
@@ -227,7 +227,11 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <Heart className="mx-auto mb-6 h-16 w-16 text-white" />
+            <img
+              src={CtaLogo}
+              alt="Logo Fondation Bien Aimé Cassis"
+              className="mx-auto mb-6 h-20 w-auto object-contain"
+            />
             <h2 className="mb-6 font-display text-3xl font-bold text-white md:text-4xl">
               {content.home.ctaSection.title}
             </h2>

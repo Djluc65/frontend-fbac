@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import AdminShell from '../../components/admin/AdminShell'
+import AdminImageUploadPanel from '../../components/admin/AdminImageUploadPanel'
 import Button from '../../components/common/Button'
 import Input from '../../components/common/Input'
 import { useAppSelector } from '../../app/hooks'
@@ -13,6 +14,7 @@ import {
   useDeleteNewsMutation,
   useGetAdminNewsQuery,
   useUpdateNewsMutation,
+  useUploadNewsImageMutation,
 } from '../../features/news/newsApi'
 import type { NewsCategory, NewsItem, NewsStatus } from '../../features/news/newsTypes'
 import { selectCurrentUser } from '../../features/auth/authSelectors'
@@ -94,11 +96,13 @@ const AdminNewsPage = () => {
   const [createNews, { isLoading: isCreating }] = useCreateNewsMutation()
   const [updateNews, { isLoading: isUpdating }] = useUpdateNewsMutation()
   const [deleteNews, { isLoading: isDeleting }] = useDeleteNewsMutation()
+  const [uploadNewsImage, { isLoading: isUploadingImage }] = useUploadNewsImageMutation()
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm<NewsFormValues>({
@@ -140,6 +144,19 @@ const AdminNewsPage = () => {
   }, [editingNews, reset])
 
   const imagePreview = watch('image')
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const response = await uploadNewsImage(file).unwrap()
+      setValue('image', response.url, {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
+      toast.success("L'image de la publication a été téléversée.")
+    } catch (error) {
+      toast.error(getApiErrorMessage(error))
+    }
+  }
 
   const onSubmit = async (values: NewsFormValues) => {
     try {
@@ -196,7 +213,7 @@ const AdminNewsPage = () => {
   return (
     <AdminShell
       title="Gestion des publications"
-      description="Rédigez les actualités de la fondation, choisissez leur statut et gérez leur image principale via URL."
+      description="Rédigez les actualités de la fondation, choisissez leur statut et gérez leur image principale par téléversement ou URL."
       actions={
         <Button variant="secondary" onClick={() => setEditingNews(null)}>
           <Plus className="h-4 w-4" />
@@ -264,6 +281,16 @@ const AdminNewsPage = () => {
                 error={errors.image?.message}
                 leftIcon={<ImageIcon className="h-5 w-5" />}
                 {...register('image')}
+              />
+
+              <AdminImageUploadPanel
+                id="news-image-upload"
+                title="Téléverser l'image de la publication"
+                description="Choisissez une image depuis votre ordinateur. Le champ URL sera rempli automatiquement."
+                imageUrl={imagePreview}
+                previewAlt="Aperçu de la publication"
+                isUploading={isUploadingImage}
+                onUpload={handleImageUpload}
               />
 
               <div className="grid gap-4 md:grid-cols-2">
@@ -334,7 +361,7 @@ const AdminNewsPage = () => {
                   />
                 ) : (
                   <div className="flex h-56 items-center justify-center text-sm text-slate-400">
-                    Ajoutez une URL d'image pour voir l'aperçu.
+                    Téléversez une image ou ajoutez une URL pour voir l'aperçu.
                   </div>
                 )}
               </div>

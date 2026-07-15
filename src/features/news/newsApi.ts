@@ -1,6 +1,12 @@
 import { baseApi } from '../../services/baseApi'
 import type { NewsItem, NewsPayload } from './newsTypes'
 
+interface UploadNewsImageResponse {
+  message: string
+  fileName: string
+  url: string
+}
+
 export const newsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getPublicNews: builder.query<NewsItem[], void>({
@@ -58,6 +64,19 @@ export const newsApi = baseApi.injectEndpoints({
         { type: 'NewsList', id: 'LIST' },
       ],
     }),
+    uploadNewsImage: builder.mutation<UploadNewsImageResponse, File>({
+      query: (file) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        formData.append('folder', 'news')
+
+        return {
+          url: '/news/upload',
+          method: 'POST',
+          body: formData,
+        }
+      },
+    }),
   }),
 })
 
@@ -67,4 +86,5 @@ export const {
   useCreateNewsMutation,
   useUpdateNewsMutation,
   useDeleteNewsMutation,
+  useUploadNewsImageMutation,
 } = newsApi

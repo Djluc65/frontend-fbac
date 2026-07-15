@@ -107,6 +107,7 @@ const AdminLoginPage = () => {
               to="/"
               className="inline-flex max-w-full"
               imageClassName="max-w-[220px]"
+              variant="light"
             />
 
             <div className="space-y-6">

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { LayoutDashboard, Megaphone, Newspaper, FilePenLine, LogOut } from 'lucide-react'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { House, LayoutDashboard, Megaphone, Newspaper, FilePenLine, LogOut } from 'lucide-react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import Button from '../common/Button'
 import BrandLogo from '../common/BrandLogo'
@@ -90,6 +90,7 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
                   to="/"
                   className="inline-flex max-w-full"
                   imageClassName="max-w-[180px] sm:max-w-[220px]"
+                  variant="light"
                 />
                 <div className="inline-flex w-fit items-center rounded-full bg-white/15 px-4 py-2 text-sm font-medium">
                   Administration sécurisée
@@ -110,6 +111,13 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
 
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 {actions}
+                <Link
+                  to="/"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/30 bg-white px-4 py-3 text-sm font-semibold text-orange-700 transition hover:bg-orange-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-orange-600"
+                >
+                  <House className="h-4 w-4" />
+                  Accueil
+                </Link>
                 <Button
                   variant="secondary"
                   className="border-white/30 bg-white text-orange-700 hover:bg-orange-50"

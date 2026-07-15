@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
-import DefaultLogo from '../../logo/logo1-remove-background.png'
+import DefaultLogo from '../../logo/logo2-remove-background.png'
 import { useSiteContent } from '../features/siteContent/useSiteContent'
 
 const Navbar = () => {

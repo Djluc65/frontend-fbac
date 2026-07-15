@@ -1,6 +1,17 @@
 import { baseApi } from '../../services/baseApi'
 import type { AdminSiteContentResponse, SiteContent } from './siteContentTypes'
 
+interface UploadSiteContentImageArgs {
+  file: File
+  folder: string
+}
+
+interface UploadSiteContentImageResponse {
+  message: string
+  fileName: string
+  url: string
+}
+
 export const siteContentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getPublicSiteContent: builder.query<SiteContent, void>({
@@ -25,6 +36,22 @@ export const siteContentApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'SiteContent', id: 'MAIN' }],
     }),
+    uploadSiteContentImage: builder.mutation<
+      UploadSiteContentImageResponse,
+      UploadSiteContentImageArgs
+    >({
+      query: ({ file, folder }) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        formData.append('folder', folder)
+
+        return {
+          url: '/site-content/admin/upload',
+          method: 'POST',
+          body: formData,
+        }
+      },
+    }),
   }),
 })
 
@@ -32,4 +59,5 @@ export const {
   useGetPublicSiteContentQuery,
   useGetAdminSiteContentQuery,
   useUpdateSiteContentMutation,
+  useUploadSiteContentImageMutation,
 } = siteContentApi

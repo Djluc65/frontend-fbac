@@ -1,7 +1,7 @@
-import { useEffect, type TextareaHTMLAttributes } from 'react'
+import { useEffect, useState, type ChangeEvent, type TextareaHTMLAttributes } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import { FilePenLine, Save } from 'lucide-react'
+import { FilePenLine, ImagePlus, LoaderCircle, Plus, Save, Trash2, Upload } from 'lucide-react'
 import AdminShell from '../../components/admin/AdminShell'
 import Button from '../../components/common/Button'
 import Input from '../../components/common/Input'
@@ -10,6 +10,7 @@ import { selectCurrentUser } from '../../features/auth/authSelectors'
 import { defaultSiteContent } from '../../features/siteContent/defaultSiteContent'
 import {
   useGetAdminSiteContentQuery,
+  useUploadSiteContentImageMutation,
   useUpdateSiteContentMutation,
 } from '../../features/siteContent/siteContentApi'
 import type { SiteContent } from '../../features/siteContent/siteContentTypes'
@@ -603,6 +604,99 @@ const TextAreaField = ({
   </div>
 )
 
+type UploadableImageField = 'homeHeroImageUrl' | 'homeTrustImageUrl' | 'aboutStoryImageUrl'
+type TeamEditableField = 'name' | 'role' | 'imageUrl'
+
+const createEmptyTeamMember = () => ({
+  name: '',
+  role: '',
+  imageUrl: '',
+})
+
+const ImageUploadPanel = ({
+  id,
+  title,
+  description,
+  imageUrl,
+  previewAlt,
+  isUploading,
+  isBusy,
+  onUpload,
+}: {
+  id: string
+  title: string
+  description: string
+  imageUrl: string
+  previewAlt: string
+  isUploading: boolean
+  isBusy: boolean
+  onUpload: (file: File) => Promise<void>
+}) => {
+  const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+
+    event.target.value = ''
+
+    if (!file || isBusy) {
+      return
+    }
+
+    await onUpload(file)
+  }
+
+  return (
+    <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+      <div className="flex items-start gap-3">
+        <div className="rounded-2xl bg-orange-100 p-2 text-orange-600">
+          <ImagePlus className="h-5 w-5" />
+        </div>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
+          <p className="mt-1 text-xs leading-5 text-slate-500">{description}</p>
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <label
+          htmlFor={id}
+          className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition ${
+            isBusy
+              ? 'pointer-events-none bg-slate-200 text-slate-500'
+              : 'bg-orange-500 text-white hover:bg-orange-600'
+          }`}
+        >
+          {isUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+          {isUploading ? 'Téléversement...' : 'Téléverser une image'}
+        </label>
+        <input
+          id={id}
+          type="file"
+          accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml"
+          className="sr-only"
+          disabled={isBusy}
+          onChange={(event) => {
+            void handleFileChange(event)
+          }}
+        />
+        <p className="text-xs leading-5 text-slate-500">JPG, PNG, WEBP, GIF ou SVG, 5 Mo maximum.</p>
+      </div>
+
+      {imageUrl ? (
+        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <img src={imageUrl} alt={previewAlt} className="h-44 w-full object-cover sm:h-52" />
+          <div className="border-t border-slate-200 px-4 py-3">
+            <p className="truncate text-xs text-slate-500">{imageUrl}</p>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-6 text-center text-sm text-slate-500">
+          Aucune image sélectionnée pour le moment.
+        </div>
+      )}
+    </div>
+  )
+}
+
 const AdminContentPage = () => {
   const user = useAppSelector(selectCurrentUser)
   const canManageContent = hasContentAccess(user?.permissions)
@@ -610,16 +704,81 @@ const AdminContentPage = () => {
     skip: !canManageContent,
   })
   const [updateSiteContent, { isLoading: isSaving }] = useUpdateSiteContentMutation()
+  const [uploadSiteContentImage, { isLoading: isUploadingImage }] = useUploadSiteContentImageMutation()
+  const [activeUploadKey, setActiveUploadKey] = useState<string | null>(null)
 
-  const { register, handleSubmit, reset } = useForm<ContentFormValues>({
+  const { register, handleSubmit, reset, setValue, watch } = useForm<ContentFormValues>({
     defaultValues: toFormValues(defaultSiteContent),
   })
+
+  const homeHeroImageUrl = watch('homeHeroImageUrl')
+  const homeHeroImageAlt = watch('homeHeroImageAlt')
+  const homeTrustImageUrl = watch('homeTrustImageUrl')
+  const homeTrustImageAlt = watch('homeTrustImageAlt')
+  const aboutStoryImageUrl = watch('aboutStoryImageUrl')
+  const aboutStoryImageAlt = watch('aboutStoryImageAlt')
+  const aboutTeamTextValue = watch('aboutTeamText')
+  const teamMembers = parseTeam(aboutTeamTextValue)
 
   useEffect(() => {
     if (data?.content) {
       reset(toFormValues(data.content))
     }
   }, [data, reset])
+
+  const saveTeamMembers = (items: Array<{ name: string; role: string; imageUrl: string }>) => {
+    setValue('aboutTeamText', serializeTeam(items), { shouldDirty: true })
+  }
+
+  const handleUploadForField = async (
+    field: UploadableImageField,
+    folder: string,
+    file: File,
+    successLabel: string
+  ) => {
+    try {
+      setActiveUploadKey(field)
+      const response = await uploadSiteContentImage({ file, folder }).unwrap()
+      setValue(field, response.url, { shouldDirty: true })
+      toast.success(`${successLabel} téléversée avec succès.`)
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    } finally {
+      setActiveUploadKey(null)
+    }
+  }
+
+  const handleTeamMemberChange = (index: number, field: TeamEditableField, value: string) => {
+    const nextMembers = teamMembers.map((member, memberIndex) =>
+      memberIndex === index ? { ...member, [field]: value } : member
+    )
+
+    saveTeamMembers(nextMembers)
+  }
+
+  const handleAddTeamMember = () => {
+    saveTeamMembers([...teamMembers, createEmptyTeamMember()])
+  }
+
+  const handleRemoveTeamMember = (index: number) => {
+    saveTeamMembers(teamMembers.filter((_, memberIndex) => memberIndex !== index))
+  }
+
+  const handleTeamImageUpload = async (index: number, file: File) => {
+    try {
+      setActiveUploadKey(`team-${index}`)
+      const response = await uploadSiteContentImage({ file, folder: 'team' }).unwrap()
+      const nextMembers = teamMembers.map((member, memberIndex) =>
+        memberIndex === index ? { ...member, imageUrl: response.url } : member
+      )
+      saveTeamMembers(nextMembers)
+      toast.success(`Photo du membre ${index + 1} téléversée avec succès.`)
+    } catch (error) {
+      toast.error(getErrorMessage(error))
+    } finally {
+      setActiveUploadKey(null)
+    }
+  }
 
   const onSubmit = async (values: ContentFormValues) => {
     try {
@@ -736,8 +895,34 @@ const AdminContentPage = () => {
             <Input label="Lien bouton principal" id="homeHeroPrimaryButtonLink" {...register('homeHeroPrimaryButtonLink')} />
             <Input label="Bouton secondaire" id="homeHeroSecondaryButtonLabel" {...register('homeHeroSecondaryButtonLabel')} />
             <Input label="Lien bouton secondaire" id="homeHeroSecondaryButtonLink" {...register('homeHeroSecondaryButtonLink')} />
-            <Input label="Image hero" id="homeHeroImageUrl" {...register('homeHeroImageUrl')} />
+            <Input label="URL image hero" id="homeHeroImageUrl" {...register('homeHeroImageUrl')} />
             <Input label="Alt image hero" id="homeHeroImageAlt" {...register('homeHeroImageAlt')} />
+          </div>
+          <div className="mt-4 grid gap-4 xl:grid-cols-2">
+            <ImageUploadPanel
+              id="home-hero-upload"
+              title="Téléverser l'image hero"
+              description="Choisissez une image depuis votre ordinateur. L'URL sera remplie automatiquement."
+              imageUrl={homeHeroImageUrl}
+              previewAlt={homeHeroImageAlt || 'Image hero'}
+              isUploading={isUploadingImage && activeUploadKey === 'homeHeroImageUrl'}
+              isBusy={isUploadingImage}
+              onUpload={(file) =>
+                handleUploadForField('homeHeroImageUrl', 'home-hero', file, "L'image hero")
+              }
+            />
+            <ImageUploadPanel
+              id="home-trust-upload"
+              title="Téléverser l'image section confiance"
+              description="Cette image apparaît dans la section de confiance de la page d'accueil."
+              imageUrl={homeTrustImageUrl}
+              previewAlt={homeTrustImageAlt || 'Image section confiance'}
+              isUploading={isUploadingImage && activeUploadKey === 'homeTrustImageUrl'}
+              isBusy={isUploadingImage}
+              onUpload={(file) =>
+                handleUploadForField('homeTrustImageUrl', 'home-trust', file, "L'image de confiance")
+              }
+            />
           </div>
           <div className="mt-4">
             <TextAreaField label="Description hero" rows={3} {...register('homeHeroDescription')} />
@@ -771,7 +956,7 @@ const AdminContentPage = () => {
             <Input label="Lien bouton CTA" id="homeCtaButtonLink" {...register('homeCtaButtonLink')} />
             <Input label="Titre section confiance" id="homeTrustTitle" {...register('homeTrustTitle')} />
             <Input label="Description section confiance" id="homeTrustDescription" {...register('homeTrustDescription')} />
-            <Input label="Image section confiance" id="homeTrustImageUrl" {...register('homeTrustImageUrl')} />
+            <Input label="URL image section confiance" id="homeTrustImageUrl" {...register('homeTrustImageUrl')} />
             <Input label="Alt image confiance" id="homeTrustImageAlt" {...register('homeTrustImageAlt')} />
             <Input label="Texte lien rapports" id="homeTrustReportLabel" {...register('homeTrustReportLabel')} />
             <Input label="Lien rapports" id="homeTrustReportLink" {...register('homeTrustReportLink')} />
@@ -798,7 +983,7 @@ const AdminContentPage = () => {
             <Input label="Titre hero" id="aboutHeroTitle" {...register('aboutHeroTitle')} />
             <Input label="Description hero" id="aboutHeroDescription" {...register('aboutHeroDescription')} />
             <Input label="Titre histoire" id="aboutStoryTitle" {...register('aboutStoryTitle')} />
-            <Input label="Image histoire" id="aboutStoryImageUrl" {...register('aboutStoryImageUrl')} />
+            <Input label="URL image histoire" id="aboutStoryImageUrl" {...register('aboutStoryImageUrl')} />
             <Input label="Alt image histoire" id="aboutStoryImageAlt" {...register('aboutStoryImageAlt')} />
             <Input label="Titre mission" id="aboutMissionTitle" {...register('aboutMissionTitle')} />
             <Input label="Description mission" id="aboutMissionDescription" {...register('aboutMissionDescription')} />
@@ -808,6 +993,20 @@ const AdminContentPage = () => {
             <Input label="Description valeurs" id="aboutValuesDescription" {...register('aboutValuesDescription')} />
             <Input label="Titre équipe" id="aboutTeamTitle" {...register('aboutTeamTitle')} />
             <Input label="Description équipe" id="aboutTeamDescription" {...register('aboutTeamDescription')} />
+          </div>
+          <div className="mt-4">
+            <ImageUploadPanel
+              id="about-story-upload"
+              title="Téléverser l'image de l'histoire"
+              description="Cette image est affichée dans la section histoire de la page À propos."
+              imageUrl={aboutStoryImageUrl}
+              previewAlt={aboutStoryImageAlt || "Image de l'histoire"}
+              isUploading={isUploadingImage && activeUploadKey === 'aboutStoryImageUrl'}
+              isBusy={isUploadingImage}
+              onUpload={(file) =>
+                handleUploadForField('aboutStoryImageUrl', 'about-story', file, "L'image de l'histoire")
+              }
+            />
           </div>
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <TextAreaField
@@ -823,13 +1022,107 @@ const AdminContentPage = () => {
               {...register('aboutValuesText')}
             />
           </div>
-          <div className="mt-4">
-            <TextAreaField
-              label="Notre équipe"
-              rows={6}
-              hint="Une ligne : nom | rôle | imageUrl"
-              {...register('aboutTeamText')}
-            />
+          <input type="hidden" {...register('aboutTeamText')} />
+          <div className="mt-6 space-y-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <h3 className="text-base font-semibold text-slate-900">Membres de l'équipe</h3>
+                <p className="mt-1 text-sm text-slate-500">
+                  Ajoutez les membres un par un et téléversez leur photo directement ici.
+                </p>
+              </div>
+              <Button type="button" variant="secondary" onClick={handleAddTeamMember}>
+                <Plus className="h-4 w-4" />
+                Ajouter un membre
+              </Button>
+            </div>
+
+            {teamMembers.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+                Aucun membre n'est encore configuré. Cliquez sur "Ajouter un membre" pour commencer.
+              </div>
+            ) : null}
+
+            {teamMembers.map((member, index) => (
+              <div key={`${member.name}-${index}`} className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <h4 className="text-sm font-semibold text-slate-900">Membre {index + 1}</h4>
+                    <p className="mt-1 text-xs text-slate-500">
+                      Renseignez le nom, le rôle et la photo de cette personne.
+                    </p>
+                  </div>
+                  <Button type="button" variant="ghost" className="text-red-600 hover:bg-red-50 hover:text-red-700" onClick={() => handleRemoveTeamMember(index)}>
+                    <Trash2 className="h-4 w-4" />
+                    Supprimer
+                  </Button>
+                </div>
+
+                <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                  <Input
+                    label="Nom"
+                    id={`team-name-${index}`}
+                    value={member.name}
+                    onChange={(event) => handleTeamMemberChange(index, 'name', event.target.value)}
+                  />
+                  <Input
+                    label="Rôle"
+                    id={`team-role-${index}`}
+                    value={member.role}
+                    onChange={(event) => handleTeamMemberChange(index, 'role', event.target.value)}
+                  />
+                  <Input
+                    label="URL de la photo"
+                    id={`team-image-${index}`}
+                    value={member.imageUrl}
+                    onChange={(event) => handleTeamMemberChange(index, 'imageUrl', event.target.value)}
+                  />
+                </div>
+
+                <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_240px]">
+                  <ImageUploadPanel
+                    id={`team-upload-${index}`}
+                    title={`Téléverser la photo du membre ${index + 1}`}
+                    description="Après l'envoi, le champ URL est rempli automatiquement."
+                    imageUrl={member.imageUrl}
+                    previewAlt={member.name || `Photo du membre ${index + 1}`}
+                    isUploading={isUploadingImage && activeUploadKey === `team-${index}`}
+                    isBusy={isUploadingImage}
+                    onUpload={(file) => handleTeamImageUpload(index, file)}
+                  />
+                  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                    {member.imageUrl ? (
+                      <img
+                        src={member.imageUrl}
+                        alt={member.name || `Photo du membre ${index + 1}`}
+                        className="h-full min-h-[220px] w-full object-cover"
+                      />
+                    ) : (
+                      <div className="flex h-full min-h-[220px] items-center justify-center px-4 text-center text-sm text-slate-500">
+                        L'aperçu de la photo apparaîtra ici.
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <details className="rounded-2xl border border-slate-200 bg-white p-4">
+              <summary className="cursor-pointer text-sm font-medium text-slate-700">
+                Mode avancé : modifier la liste brute
+              </summary>
+              <div className="mt-4">
+                <TextAreaField
+                  label="Notre équipe"
+                  rows={6}
+                  hint="Une ligne : nom | rôle | imageUrl"
+                  value={aboutTeamTextValue}
+                  onChange={(event) =>
+                    setValue('aboutTeamText', event.target.value, { shouldDirty: true })
+                  }
+                />
+              </div>
+            </details>
           </div>
         </section>
 

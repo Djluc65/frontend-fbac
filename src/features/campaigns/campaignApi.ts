@@ -1,6 +1,12 @@
 import { baseApi } from '../../services/baseApi'
 import type { Campaign, CampaignPayload } from './campaignTypes'
 
+interface UploadCampaignImageResponse {
+  message: string
+  fileName: string
+  url: string
+}
+
 export const campaignApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCampaigns: builder.query<Campaign[], void>({
@@ -45,6 +51,19 @@ export const campaignApi = baseApi.injectEndpoints({
         { type: 'CampaignList', id: 'LIST' },
       ],
     }),
+    uploadCampaignImage: builder.mutation<UploadCampaignImageResponse, File>({
+      query: (file) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        formData.append('folder', 'campaigns')
+
+        return {
+          url: '/campaigns/upload',
+          method: 'POST',
+          body: formData,
+        }
+      },
+    }),
   }),
 })
 
@@ -53,4 +72,5 @@ export const {
   useCreateCampaignMutation,
   useUpdateCampaignMutation,
   useDeleteCampaignMutation,
+  useUploadCampaignImageMutation,
 } = campaignApi

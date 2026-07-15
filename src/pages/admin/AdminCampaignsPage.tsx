@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { toast } from 'sonner'
 import AdminShell from '../../components/admin/AdminShell'
+import AdminImageUploadPanel from '../../components/admin/AdminImageUploadPanel'
 import Button from '../../components/common/Button'
 import Input from '../../components/common/Input'
 import { useAppSelector } from '../../app/hooks'
@@ -13,6 +14,7 @@ import {
   useDeleteCampaignMutation,
   useGetCampaignsQuery,
   useUpdateCampaignMutation,
+  useUploadCampaignImageMutation,
 } from '../../features/campaigns/campaignApi'
 import type { Campaign, CampaignCategory, CampaignStatus } from '../../features/campaigns/campaignTypes'
 import { selectCurrentUser } from '../../features/auth/authSelectors'
@@ -107,11 +109,13 @@ const AdminCampaignsPage = () => {
   const [createCampaign, { isLoading: isCreating }] = useCreateCampaignMutation()
   const [updateCampaign, { isLoading: isUpdating }] = useUpdateCampaignMutation()
   const [deleteCampaign, { isLoading: isDeleting }] = useDeleteCampaignMutation()
+  const [uploadCampaignImage, { isLoading: isUploadingImage }] = useUploadCampaignImageMutation()
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     watch,
     formState: { errors },
   } = useForm<CampaignFormValues>({
@@ -159,6 +163,19 @@ const AdminCampaignsPage = () => {
   }, [defaultEndDate, defaultStartDate, editingCampaign, reset])
 
   const imagePreview = watch('image')
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const response = await uploadCampaignImage(file).unwrap()
+      setValue('image', response.url, {
+        shouldDirty: true,
+        shouldValidate: true,
+      })
+      toast.success("L'image de la campagne a été téléversée.")
+    } catch (error) {
+      toast.error(getApiErrorMessage(error))
+    }
+  }
 
   const onSubmit = async (values: CampaignFormValues) => {
     try {
@@ -215,7 +232,7 @@ const AdminCampaignsPage = () => {
   return (
     <AdminShell
       title="Gestion des campagnes"
-      description="Ajoutez de nouvelles campagnes, modifiez les campagnes existantes et gérez leurs images via URL."
+      description="Ajoutez de nouvelles campagnes, modifiez les campagnes existantes et gérez leurs images par téléversement ou URL."
       actions={
         <Button variant="secondary" onClick={() => setEditingCampaign(null)}>
           <Plus className="h-4 w-4" />
@@ -231,7 +248,7 @@ const AdminCampaignsPage = () => {
                   {editingCampaign ? 'Modifier la campagne' : 'Créer une campagne'}
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
-                  L'image est gérée par URL pour cette première version.
+                  Vous pouvez téléverser une image ou renseigner une URL manuellement.
                 </p>
               </div>
             </div>
@@ -290,6 +307,16 @@ const AdminCampaignsPage = () => {
                 error={errors.image?.message}
                 leftIcon={<ImageIcon className="h-5 w-5" />}
                 {...register('image')}
+              />
+
+              <AdminImageUploadPanel
+                id="campaign-image-upload"
+                title="Téléverser l'image de la campagne"
+                description="Choisissez une image depuis votre ordinateur. Le champ URL sera rempli automatiquement."
+                imageUrl={imagePreview}
+                previewAlt="Aperçu de la campagne"
+                isUploading={isUploadingImage}
+                onUpload={handleImageUpload}
               />
 
               <div className="grid gap-4 md:grid-cols-2">
@@ -374,7 +401,7 @@ const AdminCampaignsPage = () => {
                   />
                 ) : (
                   <div className="flex h-56 items-center justify-center text-sm text-slate-400">
-                    Ajoutez une URL d'image pour voir l'aperçu.
+                    Téléversez une image ou ajoutez une URL pour voir l'aperçu.
                   </div>
                 )}
               </div>
