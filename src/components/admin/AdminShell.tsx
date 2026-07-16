@@ -135,7 +135,7 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
             <aside className="h-fit rounded-3xl bg-white p-4 shadow-panel">
               <BrandLogo
                 to="/"
-                className="mb-4 inline-flex max-w-full px-3"
+                className="mb-4 hidden max-w-full px-3 sm:inline-flex"
                 imageClassName="max-w-[170px]"
                 loading="lazy"
               />
