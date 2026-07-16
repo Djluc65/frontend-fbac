@@ -1,5 +1,6 @@
 import type { ChangeEvent } from 'react'
 import { ImagePlus, LoaderCircle, Upload } from 'lucide-react'
+import ResilientImage from '../common/ResilientImage'
 
 interface AdminImageUploadPanelProps {
   id: string
@@ -70,7 +71,13 @@ const AdminImageUploadPanel = ({
 
       {imageUrl ? (
         <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          <img src={imageUrl} alt={previewAlt} className="h-44 w-full object-cover sm:h-52" />
+          <ResilientImage
+            src={imageUrl}
+            alt={previewAlt}
+            className="h-44 w-full object-cover sm:h-52"
+            fallbackClassName="h-44 w-full sm:h-52"
+            fallbackLabel="Image indisponible"
+          />
           <div className="border-t border-slate-200 px-4 py-3">
             <p className="truncate text-xs text-slate-500">{imageUrl}</p>
           </div>

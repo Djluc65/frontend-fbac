@@ -93,7 +93,7 @@ const Campaigns = () => {
                   </div>
 
                   <Link
-                    to="/faire-un-don"
+                    to={`/faire-un-don?type=campaign&campaignId=${campaign._id}&step=2`}
                     className="block w-full rounded-xl bg-orange-500 py-3 text-center font-semibold text-white transition-colors hover:bg-orange-600"
                   >
                     {content.campaignsPage.donateLabel}

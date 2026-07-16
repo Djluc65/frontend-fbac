@@ -13,8 +13,21 @@ import Register from '../pages/auth/Register'
 import AdminDashboardPage from '../pages/admin/AdminDashboardPage'
 import AdminCampaignsPage from '../pages/admin/AdminCampaignsPage'
 import AdminContentPage from '../pages/admin/AdminContentPage'
+import AdminPaymentMethodsPage from '../pages/admin/AdminPaymentMethodsPage'
+import AdminPaymentProofsPage from '../pages/admin/AdminPaymentProofsPage'
 import AdminLoginPage from '../pages/auth/AdminLoginPage'
 import AdminNewsPage from '../pages/admin/AdminNewsPage'
+import DonationDashboardPage from '../pages/admin/DonationDashboardPage'
+import DonationsPage from '../pages/admin/DonationsPage'
+import DonationDetailsPage from '../pages/admin/DonationDetailsPage'
+import PaymentReviewPage from '../pages/admin/PaymentReviewPage'
+import DonationStatisticsPage from '../pages/admin/DonationStatisticsPage'
+import DonationSimulationPage from '../pages/admin/DonationSimulationPage'
+import DonationReportsPage from '../pages/admin/DonationReportsPage'
+import DonationExportsPage from '../pages/admin/DonationExportsPage'
+import ExportHistoryPage from '../pages/admin/ExportHistoryPage'
+import DonationTransactionsPage from '../pages/admin/DonationTransactionsPage'
+import AuditLogsPage from '../pages/admin/AuditLogsPage'
 import AdminRoute from './AdminRoute'
 import ProtectedRoute from './ProtectedRoute'
 
@@ -38,6 +51,20 @@ const AppRoutes = () => {
         <Route path="contenu" element={<AdminContentPage />} />
         <Route path="campagnes" element={<AdminCampaignsPage />} />
         <Route path="publications" element={<AdminNewsPage />} />
+        <Route path="paiements" element={<AdminPaymentMethodsPage />} />
+        <Route path="paiements/verifications" element={<AdminPaymentProofsPage />} />
+        <Route path="donations/dashboard" element={<DonationDashboardPage />} />
+        <Route path="donations" element={<DonationsPage />} />
+        <Route path="donations/:id" element={<DonationDetailsPage />} />
+        <Route path="donations/review" element={<PaymentReviewPage />} />
+        <Route path="donations/transactions" element={<DonationTransactionsPage />} />
+        <Route path="donations/statistics" element={<DonationStatisticsPage />} />
+        <Route path="donations/simulations" element={<DonationSimulationPage />} />
+        <Route path="donations/reports" element={<DonationReportsPage />} />
+        <Route path="donations/exports" element={<DonationExportsPage />} />
+        <Route path="donations/exports/history" element={<ExportHistoryPage />} />
+        <Route path="settings/payment-methods" element={<AdminPaymentMethodsPage />} />
+        <Route path="audit-logs" element={<AuditLogsPage />} />
       </Route>
 
       <Route path="/" element={<Layout />}>

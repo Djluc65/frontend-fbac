@@ -1,4 +1,13 @@
-import { FilePenLine, FolderKanban, Megaphone, Newspaper, ShieldCheck, UserCircle2 } from 'lucide-react'
+import {
+  FilePenLine,
+  FolderKanban,
+  HandCoins,
+  Megaphone,
+  Newspaper,
+  ShieldCheck,
+  UserCircle2,
+  WalletCards,
+} from 'lucide-react'
 import { Link } from 'react-router-dom'
 import AdminShell from '../../components/admin/AdminShell'
 import { useAppSelector } from '../../app/hooks'
@@ -22,6 +31,7 @@ const AdminDashboardPage = () => {
   const canManageCampaigns = hasPermission(permissions, ['campaigns.manage'])
   const canManagePublications = hasPermission(permissions, ['news.create', 'news.update', 'news.delete'])
   const canManageContent = hasPermission(permissions, ['content.manage'])
+  const canManagePayments = hasPermission(permissions, ['donations.manage', 'donations.read'])
 
   const quickAccess = [
     {
@@ -44,6 +54,27 @@ const AdminDashboardPage = () => {
       to: '/admin/publications',
       icon: Newspaper,
       visible: canManagePublications,
+    },
+    {
+      title: 'Vue d’ensemble des dons',
+      description: 'Accéder aux indicateurs de collecte, à l’activité récente et aux cartes statistiques du module dons.',
+      to: '/admin/donations/dashboard',
+      icon: HandCoins,
+      visible: canManagePayments,
+    },
+    {
+      title: 'Gérer les paiements',
+      description: 'Activer ou désactiver les moyens de paiement et configurer leurs instructions publiques.',
+      to: '/admin/paiements',
+      icon: WalletCards,
+      visible: canManagePayments,
+    },
+    {
+      title: 'Paiements à vérifier',
+      description: 'Consulter les preuves de virement, Zelle et Cash App puis approuver ou rejeter chaque paiement manuel.',
+      to: '/admin/paiements/verifications',
+      icon: ShieldCheck,
+      visible: canManagePayments,
     },
   ].filter((item) => item.visible)
 

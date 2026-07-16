@@ -120,14 +120,12 @@ const AdminLoginPage = () => {
                 </h1>
               </div>
               <p className="max-w-xl text-base leading-7 text-orange-50">
-                Cette connexion est réservée aux profils autorisés par le backend. Les sessions sont
-                protégées via cookies HttpOnly, rafraîchissement automatique et contrôle d'accès.
+                Cette interface est réservée aux administrateurs autorisés.
               </p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/10 p-5 text-sm text-orange-50">
-              Le backend réel utilise actuellement les routes <code>/api/auth/*</code> avec
-              authentification par cookies sécurisés.
+              Cette interface est réservée aux administrateurs autorisés.
             </div>
           </section>
 

@@ -24,7 +24,14 @@ export interface NormalizedAuthResponse {
   accessToken: string | null
 }
 
-export const ADMIN_PANEL_ROLES = ['admin', 'super_admin', 'manager'] as const
+export const ADMIN_PANEL_ROLES = [
+  'admin',
+  'super_admin',
+  'manager',
+  'finance_manager',
+  'donations_manager',
+  'content_editor',
+] as const
 
 export const canAccessAdminPanel = (user: AuthUser | null | undefined) => {
   if (!user) {

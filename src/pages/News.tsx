@@ -4,6 +4,7 @@ import { Calendar, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useGetPublicNewsQuery } from '../features/news/newsApi'
 import { useSiteContent } from '../features/siteContent/useSiteContent'
+import ResilientImage from '../components/common/ResilientImage'
 
 const formatDate = (value: string) =>
   new Intl.DateTimeFormat('fr-FR', {
@@ -54,10 +55,12 @@ const News = () => {
                 className="group overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-xl"
               >
                 <div className="relative overflow-hidden">
-                  <img
+                  <ResilientImage
                     src={item.image}
                     alt={item.title}
                     className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    fallbackClassName="h-48 w-full"
+                    fallbackLabel="Image de l'actualité indisponible"
                   />
                 </div>
                 <div className="p-6">

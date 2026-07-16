@@ -8,6 +8,7 @@ import AdminShell from '../../components/admin/AdminShell'
 import AdminImageUploadPanel from '../../components/admin/AdminImageUploadPanel'
 import Button from '../../components/common/Button'
 import Input from '../../components/common/Input'
+import ResilientImage from '../../components/common/ResilientImage'
 import { useAppSelector } from '../../app/hooks'
 import {
   useCreateNewsMutation,
@@ -354,10 +355,12 @@ const AdminNewsPage = () => {
               <h3 className="font-display text-xl font-semibold text-slate-900">Aperçu image</h3>
               <div className="mt-4 overflow-hidden rounded-2xl bg-slate-100">
                 {imagePreview ? (
-                  <img
+                  <ResilientImage
                     src={imagePreview}
                     alt="Aperçu de la publication"
                     className="h-56 w-full object-cover"
+                    fallbackClassName="h-56 w-full"
+                    fallbackLabel="Aperçu indisponible"
                   />
                 ) : (
                   <div className="flex h-56 items-center justify-center text-sm text-slate-400">
@@ -386,10 +389,12 @@ const AdminNewsPage = () => {
                       key={newsItem._id}
                       className="overflow-hidden rounded-2xl border border-slate-200"
                     >
-                      <img
+                      <ResilientImage
                         src={newsItem.image}
                         alt={newsItem.title}
                         className="h-36 w-full object-cover"
+                        fallbackClassName="h-36 w-full"
+                        fallbackLabel="Image indisponible"
                       />
                       <div className="space-y-3 p-4">
                         <div className="flex items-start justify-between gap-3">

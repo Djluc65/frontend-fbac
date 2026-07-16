@@ -1,7 +1,24 @@
-import type { ReactNode } from 'react'
+import { useLayoutEffect, useRef, type ReactNode } from 'react'
 import { Helmet } from 'react-helmet-async'
-import { House, LayoutDashboard, Megaphone, Newspaper, FilePenLine, LogOut } from 'lucide-react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import {
+  BarChart3,
+  ClipboardList,
+  Download,
+  FileBadge2,
+  House,
+  LayoutDashboard,
+  Megaphone,
+  Newspaper,
+  FilePenLine,
+  LogOut,
+  ReceiptText,
+  ScrollText,
+  Sigma,
+  Wallet,
+  WalletCards,
+  ShieldCheck,
+} from 'lucide-react'
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import Button from '../common/Button'
 import BrandLogo from '../common/BrandLogo'
@@ -29,14 +46,17 @@ const hasPermission = (permissions: string[] | undefined, required: string[]) =>
 }
 
 const AdminShell = ({ title, description, children, actions }: AdminShellProps) => {
+  const location = useLocation()
   const navigate = useNavigate()
   const user = useAppSelector(selectCurrentUser)
   const [logout, { isLoading }] = useLogoutMutation()
+  const contentSectionRef = useRef<HTMLElement | null>(null)
 
   const permissions = user?.permissions ?? []
   const canManageCampaigns = hasPermission(permissions, ['campaigns.manage'])
   const canManagePublications = hasPermission(permissions, ['news.create', 'news.update', 'news.delete'])
   const canManageContent = hasPermission(permissions, ['content.manage'])
+  const canManagePayments = hasPermission(permissions, ['donations.manage', 'donations.read'])
 
   const navigationItems = [
     {
@@ -63,6 +83,66 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
       icon: Newspaper,
       visible: canManagePublications,
     },
+    {
+      to: '/admin/paiements',
+      label: 'Paiements',
+      icon: WalletCards,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/paiements/verifications',
+      label: 'À vérifier',
+      icon: ShieldCheck,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/donations/dashboard',
+      label: 'Vue des dons',
+      icon: Wallet,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/donations',
+      label: 'Tous les dons',
+      icon: ClipboardList,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/donations/transactions',
+      label: 'Transactions',
+      icon: ReceiptText,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/donations/statistics',
+      label: 'Statistiques',
+      icon: BarChart3,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/donations/simulations',
+      label: 'Simulations',
+      icon: Sigma,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/donations/reports',
+      label: 'Rapports',
+      icon: FileBadge2,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/donations/exports',
+      label: 'Exports',
+      icon: Download,
+      visible: canManagePayments,
+    },
+    {
+      to: '/admin/audit-logs',
+      label: 'Audit',
+      icon: ScrollText,
+      visible: canManagePayments,
+    },
   ].filter((item) => item.visible)
 
   const handleLogout = async () => {
@@ -74,6 +154,19 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
       toast.error('Impossible de vous déconnecter pour le moment.')
     }
   }
+
+  useLayoutEffect(() => {
+    requestAnimationFrame(() => {
+      const sectionTop = contentSectionRef.current
+        ? contentSectionRef.current.getBoundingClientRect().top + window.scrollY
+        : 0
+
+      window.scrollTo({
+        top: Math.max(sectionTop, 0),
+        behavior: 'auto',
+      })
+    })
+  }, [location.pathname])
 
   return (
     <>
@@ -131,7 +224,7 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
             </div>
           </section>
 
-          <section className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
+          <section ref={contentSectionRef} className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
             <aside className="h-fit rounded-3xl bg-white p-4 shadow-panel">
               <BrandLogo
                 to="/"
