@@ -1,0 +1,1249 @@
+﻿Agis comme un architecte logiciel Full Stack Senior spécialisé en React, TypeScript, Node.js, Express, MongoDB, tableaux de bord financiers, statistiques, génération de rapports et export de données.
+
+Je développe le site de la Fondation Bien Aimé Cassis.
+
+Le projet utilise actuellement :
+
+Frontend :
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Redux Toolkit
+- RTK Query
+- React Hook Form
+- Zod
+- Recharts
+- Lucide React
+- Sonner
+
+Backend :
+- Node.js
+- Express
+- TypeScript
+- MongoDB
+- Mongoose
+- JWT
+- Refresh Token
+- RBAC
+- Zod
+- Multer
+- Cloudinary ou Amazon S3
+- Gestion centralisée des erreurs
+- Audit logs
+
+Le système de dons prend en charge :
+
+- PayPal
+- Virement bancaire
+- Zelle
+- Cash App
+- Paiement sur place
+- Carte bancaire prévue ultérieurement
+
+Je veux maintenant ajouter dans l’espace administrateur une section complète appelée :
+
+GESTION ET ANALYSE DES DONS
+
+Cette section doit permettre de :
+
+- consulter tous les dons ;
+- rechercher et filtrer les dons ;
+- afficher les détails complets d’un don ;
+- analyser les statistiques ;
+- traiter les paiements ;
+- approuver ou rejeter les paiements manuels ;
+- suivre les transactions PayPal ;
+- simuler des scénarios financiers ;
+- générer des rapports ;
+- exporter les données sous plusieurs formats ;
+- suivre l’historique des actions administratives.
+
+==================================================
+1. OBJECTIF GÉNÉRAL
+==================================================
+
+Créer un module administrateur professionnel permettant aux rôles autorisés de gérer l’ensemble du cycle de vie des dons.
+
+Rôles autorisés :
+
+- finance_manager
+- admin
+- super_admin
+
+Les utilisateurs ordinaires ne doivent jamais pouvoir accéder à cette section.
+
+Le backend doit vérifier les rôles et permissions sur chaque route.
+
+==================================================
+2. MENU ADMINISTRATEUR
+==================================================
+
+Ajouter dans la sidebar administrateur :
+
+- Vue d’ensemble des dons
+- Tous les dons
+- Paiements à vérifier
+- Transactions
+- Statistiques
+- Simulations
+- Rapports
+- Exports
+- Paramètres des paiements
+- Journal d’audit
+
+Routes recommandées :
+
+/admin/donations/dashboard
+/admin/donations
+/admin/donations/review
+/admin/donations/transactions
+/admin/donations/statistics
+/admin/donations/simulations
+/admin/donations/reports
+/admin/donations/exports
+/admin/settings/payment-methods
+/admin/audit-logs
+
+==================================================
+3. TABLEAU DE BORD DES DONS
+==================================================
+
+Créer une page :
+
+/admin/donations/dashboard
+
+Afficher des cartes statistiques :
+
+- montant total des dons confirmés ;
+- montant total en attente ;
+- montant total remboursé ;
+- montant total rejeté ;
+- nombre total de dons ;
+- nombre de donateurs uniques ;
+- nombre de nouveaux donateurs ce mois ;
+- don moyen ;
+- don médian ;
+- don maximum ;
+- don minimum ;
+- nombre de dons récurrents ;
+- nombre de dons anonymes ;
+- taux de confirmation ;
+- taux de rejet ;
+- taux de remboursement ;
+- nombre de preuves en attente ;
+- nombre de campagnes actives ;
+- nombre de paiements PayPal ;
+- nombre de virements bancaires ;
+- nombre de paiements Zelle ;
+- nombre de paiements Cash App.
+
+Chaque carte doit afficher :
+
+- la valeur actuelle ;
+- l’évolution en pourcentage ;
+- une comparaison avec la période précédente ;
+- une icône ;
+- un état positif, négatif ou neutre.
+
+==================================================
+4. STATISTIQUES ET GRAPHIQUES
+==================================================
+
+Utiliser Recharts.
+
+Créer les graphiques suivants :
+
+1. Dons par jour
+2. Dons par semaine
+3. Dons par mois
+4. Dons par année
+5. Dons par mode de paiement
+6. Dons par devise
+7. Dons par campagne
+8. Dons par programme
+9. Dons par pays
+10. Dons par statut
+11. Dons anonymes vs identifiés
+12. Dons uniques vs récurrents
+13. Nouveaux donateurs vs donateurs récurrents
+14. Montant moyen par donateur
+15. Progression des campagnes
+16. Taux de conversion des dons
+17. Taux de validation des paiements manuels
+18. Délai moyen de traitement des preuves
+19. Dons remboursés
+20. Évolution mensuelle cumulée
+
+Types de graphiques :
+
+- line chart
+- area chart
+- bar chart
+- stacked bar chart
+- pie chart
+- donut chart
+- funnel chart si utile
+
+Ajouter :
+
+- filtres par période ;
+- comparaison avec la période précédente ;
+- tooltip ;
+- légende ;
+- responsive container ;
+- export du graphique.
+
+==================================================
+5. FILTRES STATISTIQUES
+==================================================
+
+Ajouter les filtres suivants :
+
+- aujourd’hui ;
+- hier ;
+- 7 derniers jours ;
+- 30 derniers jours ;
+- mois en cours ;
+- mois précédent ;
+- année en cours ;
+- année précédente ;
+- période personnalisée.
+
+Filtres additionnels :
+
+- mode de paiement ;
+- devise ;
+- campagne ;
+- programme ;
+- statut ;
+- pays ;
+- donateur ;
+- fréquence ;
+- anonymat ;
+- paiement manuel ou automatique.
+
+Les statistiques doivent se recalculer automatiquement après changement de filtre.
+
+==================================================
+6. LISTE COMPLÈTE DES DONS
+==================================================
+
+Créer une page :
+
+/admin/donations
+
+Afficher un tableau avec les colonnes :
+
+- référence ;
+- donateur ;
+- email ;
+- téléphone ;
+- montant ;
+- devise ;
+- moyen de paiement ;
+- campagne ;
+- programme ;
+- fréquence ;
+- statut ;
+- statut de la preuve ;
+- date ;
+- pays ;
+- actions.
+
+Actions disponibles :
+
+- voir ;
+- modifier certaines informations administratives ;
+- approuver ;
+- rejeter ;
+- demander une nouvelle preuve ;
+- rembourser ;
+- télécharger le reçu ;
+- imprimer ;
+- exporter ;
+- ajouter une note ;
+- consulter l’historique.
+
+==================================================
+7. RECHERCHE ET FILTRES
+==================================================
+
+Ajouter :
+
+- recherche par nom ;
+- recherche par email ;
+- recherche par référence ;
+- recherche par transaction ;
+- recherche par campagne ;
+- recherche par programme.
+
+Filtres :
+
+- date ;
+- statut ;
+- mode de paiement ;
+- devise ;
+- pays ;
+- fréquence ;
+- anonyme ;
+- connecté ou invité ;
+- preuve en attente ;
+- paiement approuvé ;
+- paiement rejeté ;
+- remboursement ;
+- montant minimum ;
+- montant maximum.
+
+Ajouter :
+
+- tri croissant/décroissant ;
+- pagination ;
+- taille de page ;
+- réinitialisation des filtres ;
+- sauvegarde d’un filtre personnalisé.
+
+==================================================
+8. DÉTAIL D’UN DON
+==================================================
+
+Créer une page :
+
+/admin/donations/:id
+
+Afficher :
+
+INFORMATIONS DU DON
+
+- référence ;
+- montant ;
+- devise ;
+- fréquence ;
+- mode de paiement ;
+- statut ;
+- date ;
+- campagne ;
+- programme ;
+- message ;
+- anonymat.
+
+DONATEUR
+
+- prénom ;
+- nom ;
+- email ;
+- téléphone ;
+- pays ;
+- compte utilisateur ;
+- nombre total de dons ;
+- montant total donné ;
+- date du premier don ;
+- date du dernier don.
+
+TRANSACTION
+
+Pour PayPal :
+
+- orderId ;
+- captureId ;
+- payerId ;
+- statut PayPal ;
+- montant ;
+- devise ;
+- dates ;
+- événements webhook ;
+- historique.
+
+Pour Zelle, Cash App et virement bancaire :
+
+- référence déclarée ;
+- référence vérifiée ;
+- preuve ;
+- date d’envoi ;
+- montant reçu ;
+- devise reçue ;
+- vérificateur ;
+- note.
+
+HISTORIQUE
+
+- création ;
+- changement de statut ;
+- upload ;
+- validation ;
+- rejet ;
+- remboursement ;
+- modification ;
+- administrateur concerné ;
+- date ;
+- IP ;
+- user-agent.
+
+==================================================
+9. TRAITEMENT DES PAIEMENTS
+==================================================
+
+Créer une page :
+
+/admin/donations/review
+
+Afficher uniquement :
+
+- paiements manuels ;
+- preuves en attente ;
+- paiements sous vérification.
+
+Modes concernés :
+
+- BANK_TRANSFER
+- ZELLE
+- CASH_APP
+- ON_SITE
+
+Actions :
+
+- approuver ;
+- rejeter ;
+- demander une nouvelle preuve ;
+- marquer comme douteux ;
+- ajouter une note ;
+- assigner à un responsable financier.
+
+==================================================
+10. APPROBATION D’UN PAIEMENT
+==================================================
+
+Avant approbation, afficher une modale contenant :
+
+- référence du don ;
+- donateur ;
+- montant attendu ;
+- devise ;
+- mode de paiement ;
+- référence fournie ;
+- fichier de preuve ;
+- montant réellement reçu ;
+- devise réellement reçue ;
+- date de réception ;
+- note administrative.
+
+Exiger une confirmation.
+
+Après approbation :
+
+- Donation.status = COMPLETED ;
+- Proof.status = APPROVED ;
+- créer une DonationTransaction ;
+- enregistrer le responsable ;
+- mettre à jour la campagne une seule fois ;
+- générer le reçu ;
+- envoyer l’e-mail ;
+- créer une notification ;
+- ajouter un AuditLog ;
+- invalider le cache RTK Query ;
+- actualiser les statistiques.
+
+==================================================
+11. REJET D’UN PAIEMENT
+==================================================
+
+Exiger une raison obligatoire.
+
+Raisons possibles :
+
+- référence introuvable ;
+- preuve illisible ;
+- montant incorrect ;
+- destinataire incorrect ;
+- devise incorrecte ;
+- preuve déjà utilisée ;
+- paiement non reçu ;
+- suspicion de fraude ;
+- autre.
+
+Après rejet :
+
+- Donation.status = REJECTED ou PENDING selon la logique métier ;
+- Proof.status = REJECTED ;
+- enregistrer la raison ;
+- notifier l’utilisateur ;
+- autoriser une nouvelle preuve si nécessaire ;
+- ajouter un AuditLog.
+
+==================================================
+12. REMBOURSEMENTS
+==================================================
+
+Créer un processus de remboursement.
+
+Pour PayPal :
+
+- utiliser l’API PayPal côté serveur ;
+- rembourser totalement ou partiellement ;
+- enregistrer la transaction de remboursement ;
+- mettre à jour le statut ;
+- mettre à jour les statistiques ;
+- envoyer un e-mail ;
+- enregistrer l’audit.
+
+Pour Zelle, Cash App et virement :
+
+- créer un remboursement manuel ;
+- demander une référence ;
+- demander un justificatif ;
+- enregistrer le montant remboursé ;
+- enregistrer la date ;
+- enregistrer le responsable ;
+- ne jamais prétendre que le remboursement a été automatisé.
+
+==================================================
+13. SIMULATION FINANCIÈRE
+==================================================
+
+Créer une page :
+
+/admin/donations/simulations
+
+L’administrateur doit pouvoir simuler des scénarios sans modifier les vraies données.
+
+Créer un formulaire avec :
+
+- période de simulation ;
+- montant moyen d’un don ;
+- nombre estimé de donateurs ;
+- taux de croissance mensuel ;
+- taux de conversion ;
+- pourcentage PayPal ;
+- pourcentage virement ;
+- pourcentage Zelle ;
+- pourcentage Cash App ;
+- taux de dons récurrents ;
+- taux de remboursement ;
+- frais PayPal estimés ;
+- frais bancaires estimés ;
+- objectif financier ;
+- nombre de campagnes.
+
+Calculer :
+
+- montant brut estimé ;
+- frais estimés ;
+- montant net estimé ;
+- nombre estimé de dons ;
+- nombre estimé de donateurs ;
+- montant mensuel ;
+- montant annuel ;
+- évolution cumulative ;
+- date estimée d’atteinte de l’objectif ;
+- différence entre objectif et résultat ;
+- scénario pessimiste ;
+- scénario réaliste ;
+- scénario optimiste.
+
+Afficher :
+
+- tableau comparatif ;
+- courbe de projection ;
+- graphique cumulatif ;
+- résumé des hypothèses.
+
+IMPORTANT :
+
+La simulation ne doit jamais modifier la base de données réelle des dons.
+
+Les résultats peuvent être enregistrés dans une collection DonationSimulation si l’administrateur souhaite les conserver.
+
+==================================================
+14. MODÈLE DONATION SIMULATION
+==================================================
+
+Créer un modèle :
+
+DonationSimulation
+
+Champs :
+
+- name ;
+- description ;
+- createdBy ;
+- parameters ;
+- results ;
+- scenarioType ;
+- createdAt ;
+- updatedAt.
+
+ScenarioType :
+
+- PESSIMISTIC
+- REALISTIC
+- OPTIMISTIC
+- CUSTOM
+
+==================================================
+15. RAPPORTS
+==================================================
+
+Créer une page :
+
+/admin/donations/reports
+
+Permettre de générer :
+
+- rapport journalier ;
+- rapport hebdomadaire ;
+- rapport mensuel ;
+- rapport trimestriel ;
+- rapport annuel ;
+- rapport par campagne ;
+- rapport par programme ;
+- rapport par mode de paiement ;
+- rapport par devise ;
+- rapport par pays ;
+- rapport par statut ;
+- rapport des remboursements ;
+- rapport des preuves en attente ;
+- rapport des donateurs ;
+- rapport des simulations.
+
+Chaque rapport doit contenir :
+
+- période ;
+- filtres utilisés ;
+- date de génération ;
+- administrateur ;
+- logo ;
+- nom de la fondation ;
+- résumé ;
+- statistiques ;
+- tableaux ;
+- graphiques ;
+- conclusions optionnelles.
+
+==================================================
+16. EXPORT DES DONNÉES
+==================================================
+
+Créer une page :
+
+/admin/donations/exports
+
+Permettre les formats suivants :
+
+- PDF
+- Excel XLSX
+- Word DOCX
+- JPG
+- PNG
+- CSV optionnel
+
+==================================================
+17. EXPORT PDF
+==================================================
+
+Le PDF doit contenir :
+
+- logo ;
+- titre ;
+- période ;
+- filtres ;
+- statistiques ;
+- tableaux ;
+- graphiques ;
+- date ;
+- administrateur ;
+- pagination ;
+- pied de page.
+
+Utiliser une bibliothèque fiable côté serveur ou frontend selon l’architecture.
+
+Exemples :
+
+- pdfmake ;
+- PDFKit ;
+- Puppeteer ;
+- jsPDF.
+
+Préférer une génération côté serveur pour les rapports officiels.
+
+==================================================
+18. EXPORT EXCEL
+==================================================
+
+Créer un fichier XLSX avec plusieurs feuilles :
+
+- Résumé
+- Dons
+- Donateurs
+- Transactions
+- Paiements en attente
+- Campagnes
+- Statistiques
+- Simulations
+
+Utiliser par exemple :
+
+- exceljs
+- xlsx
+
+Ajouter :
+
+- en-têtes ;
+- filtres ;
+- colonnes formatées ;
+- dates ;
+- devises ;
+- totaux ;
+- formules ;
+- feuilles protégées si nécessaire.
+
+==================================================
+19. EXPORT WORD
+==================================================
+
+Créer un document DOCX contenant :
+
+- logo ;
+- titre du rapport ;
+- résumé ;
+- statistiques ;
+- tableaux ;
+- graphiques ;
+- recommandations ;
+- date de génération ;
+- administrateur.
+
+Utiliser une bibliothèque comme :
+
+- docx
+
+==================================================
+20. EXPORT JPG ET PNG
+==================================================
+
+Permettre d’exporter :
+
+- un graphique individuel ;
+- un tableau de bord complet ;
+- une carte statistique ;
+- un rapport synthétique ;
+- un résultat de simulation.
+
+Formats :
+
+- PNG haute résolution ;
+- JPG haute qualité.
+
+Utiliser :
+
+- html-to-image ;
+- dom-to-image ;
+- canvas ;
+- Puppeteer côté serveur.
+
+Ajouter :
+
+- fond blanc ;
+- logo ;
+- titre ;
+- date ;
+- filtres ;
+- résolution minimale ;
+- téléchargement propre.
+
+==================================================
+21. SÉLECTION DES DONNÉES À EXPORTER
+==================================================
+
+L’administrateur doit pouvoir choisir :
+
+- toutes les données ;
+- uniquement la page actuelle ;
+- uniquement les lignes sélectionnées ;
+- statistiques seulement ;
+- graphiques seulement ;
+- transactions seulement ;
+- paiements en attente seulement ;
+- période personnalisée ;
+- campagne spécifique ;
+- programme spécifique ;
+- mode de paiement spécifique.
+
+==================================================
+22. HISTORIQUE DES EXPORTS
+==================================================
+
+Créer un modèle :
+
+ExportJob
+
+Champs :
+
+- requestedBy ;
+- type ;
+- format ;
+- filters ;
+- status ;
+- fileUrl ;
+- fileName ;
+- fileSize ;
+- error ;
+- createdAt ;
+- completedAt ;
+- expiresAt.
+
+Statuts :
+
+- PENDING
+- PROCESSING
+- COMPLETED
+- FAILED
+- EXPIRED
+
+Créer une page :
+
+/admin/donations/exports/history
+
+Afficher :
+
+- format ;
+- rapport ;
+- date ;
+- auteur ;
+- statut ;
+- taille ;
+- bouton télécharger ;
+- bouton supprimer ;
+- date d’expiration.
+
+==================================================
+23. EXPORT ASYNCHRONE
+==================================================
+
+Pour les gros exports :
+
+- créer une tâche asynchrone ;
+- afficher une progression ;
+- notifier l’administrateur à la fin ;
+- stocker temporairement le fichier ;
+- fournir une URL sécurisée ;
+- supprimer automatiquement après expiration.
+
+Utiliser une file de tâches si nécessaire :
+
+- BullMQ ;
+- Redis ;
+- autre système de queue.
+
+==================================================
+24. API BACKEND
+==================================================
+
+Créer au minimum :
+
+GET /api/admin/donations/dashboard
+GET /api/admin/donations/statistics
+GET /api/admin/donations
+GET /api/admin/donations/:id
+
+POST /api/admin/donations/:id/approve
+POST /api/admin/donations/:id/reject
+POST /api/admin/donations/:id/refund
+
+GET /api/admin/donations/review
+GET /api/admin/transactions
+
+POST /api/admin/donations/simulations
+GET /api/admin/donations/simulations
+GET /api/admin/donations/simulations/:id
+DELETE /api/admin/donations/simulations/:id
+
+POST /api/admin/donations/reports
+GET /api/admin/donations/reports
+
+POST /api/admin/donations/exports
+GET /api/admin/donations/exports
+GET /api/admin/donations/exports/:id
+DELETE /api/admin/donations/exports/:id
+
+GET /api/admin/donations/export/pdf
+GET /api/admin/donations/export/xlsx
+GET /api/admin/donations/export/docx
+GET /api/admin/donations/export/png
+GET /api/admin/donations/export/jpg
+
+==================================================
+25. AGRÉGATIONS MONGODB
+==================================================
+
+Créer des services d’agrégation pour :
+
+- somme totale ;
+- moyenne ;
+- médiane si nécessaire ;
+- min ;
+- max ;
+- groupement par date ;
+- groupement par méthode ;
+- groupement par devise ;
+- groupement par campagne ;
+- groupement par programme ;
+- groupement par pays ;
+- groupement par statut ;
+- nouveaux donateurs ;
+- donateurs récurrents ;
+- temps moyen de traitement ;
+- taux de confirmation ;
+- taux de rejet ;
+- taux de remboursement.
+
+Optimiser avec des index.
+
+==================================================
+26. TYPES TYPESCRIPT
+==================================================
+
+Créer :
+
+DonationDashboardStats
+DonationStatistics
+DonationFilter
+DonationExportRequest
+DonationExportResult
+DonationSimulationInput
+DonationSimulationResult
+DonationReportConfig
+ExportFormat
+ExportJobStatus
+
+ExportFormat :
+
+- PDF
+- XLSX
+- DOCX
+- PNG
+- JPG
+- CSV
+
+==================================================
+27. FRONTEND ADMIN
+==================================================
+
+Créer les pages :
+
+- DonationDashboardPage.tsx
+- DonationsPage.tsx
+- DonationDetailsPage.tsx
+- PaymentReviewPage.tsx
+- DonationStatisticsPage.tsx
+- DonationSimulationPage.tsx
+- DonationReportsPage.tsx
+- DonationExportsPage.tsx
+- ExportHistoryPage.tsx
+
+Créer les composants :
+
+- DonationStatsCard.tsx
+- DonationChart.tsx
+- DonationFilters.tsx
+- DonationTable.tsx
+- DonationDetailsPanel.tsx
+- PaymentProofViewer.tsx
+- ApproveDonationModal.tsx
+- RejectDonationModal.tsx
+- RefundDonationModal.tsx
+- SimulationForm.tsx
+- SimulationResults.tsx
+- ExportDialog.tsx
+- ExportProgress.tsx
+- ReportPreview.tsx
+
+==================================================
+28. RTK QUERY
+==================================================
+
+Créer ou compléter :
+
+donationsAdminApi.ts
+
+Endpoints :
+
+- getDashboardStats ;
+- getDonationStatistics ;
+- getDonations ;
+- getDonationById ;
+- approveDonation ;
+- rejectDonation ;
+- refundDonation ;
+- getPendingReviews ;
+- getTransactions ;
+- createSimulation ;
+- getSimulations ;
+- createReport ;
+- createExport ;
+- getExports ;
+- downloadExport ;
+- deleteExport.
+
+Configurer :
+
+- providesTags ;
+- invalidatesTags ;
+- pagination ;
+- filtres ;
+- erreurs typées ;
+- credentials: include ;
+- access token.
+
+==================================================
+29. PERFORMANCES
+==================================================
+
+Ajouter :
+
+- pagination côté serveur ;
+- index MongoDB ;
+- cache des statistiques ;
+- debounce de recherche ;
+- lazy loading ;
+- code splitting ;
+- export asynchrone ;
+- skeleton loaders ;
+- limite de données par requête ;
+- agrégations optimisées.
+
+==================================================
+30. SÉCURITÉ
+==================================================
+
+Protéger :
+
+- accès admin ;
+- exports ;
+- fichiers ;
+- données financières ;
+- preuves ;
+- simulations ;
+- rapports.
+
+Ajouter :
+
+- RBAC ;
+- validation Zod ;
+- audit logs ;
+- rate limiting ;
+- URLs temporaires ;
+- noms de fichiers sécurisés ;
+- aucune donnée sensible dans les logs ;
+- contrôle des filtres ;
+- prévention des injections ;
+- chiffrement si nécessaire ;
+- suppression automatique des exports expirés.
+
+==================================================
+31. RESPONSIVE
+==================================================
+
+Desktop :
+
+- tableaux complets ;
+- graphiques côte à côte ;
+- filtres en ligne.
+
+Tablette :
+
+- graphiques sur deux colonnes ;
+- filtres repliables ;
+- tableau scrollable.
+
+Smartphone :
+
+- cartes au lieu d’un tableau trop large ;
+- graphiques une colonne ;
+- boutons d’export accessibles ;
+- filtres en drawer ;
+- aucune barre de défilement horizontale générale.
+
+==================================================
+32. ACCESSIBILITÉ
+==================================================
+
+Ajouter :
+
+- labels ;
+- aria-labels ;
+- focus visible ;
+- navigation clavier ;
+- tableaux accessibles ;
+- descriptions de graphiques ;
+- alternatives textuelles ;
+- modales accessibles ;
+- contraste suffisant.
+
+==================================================
+33. TESTS
+==================================================
+
+Créer des tests pour :
+
+- statistiques ;
+- filtres ;
+- agrégations ;
+- approbation ;
+- rejet ;
+- remboursement ;
+- simulation ;
+- export PDF ;
+- export XLSX ;
+- export DOCX ;
+- export PNG ;
+- export JPG ;
+- permissions ;
+- export vide ;
+- export volumineux ;
+- données filtrées ;
+- audit ;
+- expiration des fichiers.
+
+==================================================
+34. LIVRABLES ATTENDUS
+==================================================
+
+Fournir :
+
+1. architecture backend ;
+2. architecture frontend ;
+3. modèles Mongoose ;
+4. agrégations ;
+5. services ;
+6. contrôleurs ;
+7. routes ;
+8. validations ;
+9. RTK Query ;
+10. pages administrateur ;
+11. statistiques ;
+12. graphiques ;
+13. simulations ;
+14. rapports ;
+15. export PDF ;
+16. export Excel ;
+17. export Word ;
+18. export PNG ;
+19. export JPG ;
+20. historique des exports ;
+21. file de tâches ;
+22. audit ;
+23. responsive ;
+24. tests ;
+25. README ;
+26. .env.example ;
+27. guide d’utilisation administrateur.
+
+==================================================
+35. MÉTHODE DE TRAVAIL
+==================================================
+
+Ne génère pas tout dans un seul fichier.
+
+Travaille par phases.
+
+PHASE 1
+
+- audit du module de dons existant ;
+- modèles ;
+- routes ;
+- statistiques backend ;
+- dashboard frontend.
+
+PHASE 2
+
+- liste des dons ;
+- filtres ;
+- détail ;
+- validation ;
+- rejet ;
+- remboursement.
+
+PHASE 3
+
+- page statistiques ;
+- graphiques ;
+- comparaisons ;
+- cache.
+
+PHASE 4
+
+- simulations ;
+- scénarios ;
+- sauvegarde des simulations.
+
+PHASE 5
+
+- rapports ;
+- exports PDF ;
+- exports XLSX ;
+- exports DOCX ;
+- exports PNG ;
+- exports JPG.
+
+PHASE 6
+
+- exports asynchrones ;
+- historique ;
+- sécurité ;
+- tests ;
+- documentation.
+
+Pour chaque phase :
+
+- expliquer les choix ;
+- afficher l’arborescence ;
+- fournir les commandes ;
+- produire les fichiers complets ;
+- éviter le pseudo-code ;
+- vérifier les types ;
+- vérifier les imports ;
+- indiquer comment tester.
+
+==================================================
+36. PREMIÈRE TÂCHE
+==================================================
+
+Commence par analyser mon projet actuel.
+
+Demande-moi les fichiers nécessaires, notamment :
+
+Backend :
+
+- Donation.model.ts
+- DonationTransaction.model.ts
+- PaymentProof.model.ts
+- donation.routes.ts
+- donation.controller.ts
+- donation.service.ts
+- auth.middleware.ts
+- role.middleware.ts
+- server.ts ou app.ts
+
+Frontend :
+
+- admin routes
+- admin layout
+- donationsAdminApi.ts
+- donation types
+- current donation pages
+- store.ts
+- baseApi.ts
+
+Ensuite, fournis uniquement :
+
+1. l’audit de l’existant ;
+2. l’architecture proposée ;
+3. les modèles manquants ;
+4. les endpoints nécessaires ;
+5. la liste des statistiques ;
+6. la stratégie d’export ;
+7. la stratégie de simulation ;
+8. le plan de réalisation.
+
+Attends ma validation avant de générer le code complet.
