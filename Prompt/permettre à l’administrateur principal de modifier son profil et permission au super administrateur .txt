@@ -1,0 +1,1122 @@
+﻿Agis comme un architecte logiciel Full Stack Senior spécialisé en React, TypeScript, Node.js, Express, MongoDB, authentification JWT, sécurité, RBAC et gestion des comptes administrateurs.
+
+Je développe le site de la Fondation Bien Aimé Cassis.
+
+Le projet utilise :
+
+Frontend :
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- Redux Toolkit
+- RTK Query
+- React Hook Form
+- Zod
+- Lucide React
+- Sonner
+
+Backend :
+- Node.js
+- Express
+- TypeScript
+- MongoDB
+- Mongoose
+- JWT access token
+- refresh token
+- bcrypt ou Argon2
+- cookies HttpOnly
+- RBAC
+- Zod
+- Helmet
+- CORS
+- rate limiting
+- gestion centralisée des erreurs
+- AuditLog
+
+Le projet possède déjà un espace administrateur.
+
+Je veux maintenant ajouter un module complet nommé :
+
+GESTION DU PROFIL ET DES ADMINISTRATEURS
+
+==================================================
+1. OBJECTIFS
+==================================================
+
+Créer deux fonctionnalités principales.
+
+A. PROFIL ADMINISTRATEUR
+
+Permettre à l’administrateur connecté de modifier :
+
+- prénom ;
+- nom ;
+- adresse e-mail ;
+- téléphone ;
+- photo de profil ;
+- langue préférée ;
+- fuseau horaire ;
+- mot de passe ;
+- préférences de notification.
+
+B. GESTION DES ADMINISTRATEURS
+
+Permettre uniquement au super administrateur de :
+
+- créer un compte administrateur ;
+- attribuer un rôle ;
+- attribuer des permissions ;
+- modifier un administrateur ;
+- activer ou désactiver un compte ;
+- forcer une réinitialisation du mot de passe ;
+- révoquer les sessions ;
+- supprimer ou archiver un compte ;
+- consulter l’historique des actions ;
+- gérer les rôles personnalisés.
+
+==================================================
+2. RÔLES
+==================================================
+
+Créer ou compléter les rôles suivants :
+
+- super_admin
+- admin
+- finance_manager
+- content_manager
+- campaign_manager
+- editor
+- reviewer
+- support_manager
+
+SUPER_ADMIN
+
+Peut :
+
+- tout gérer ;
+- créer d’autres administrateurs ;
+- modifier les rôles ;
+- modifier les permissions ;
+- désactiver un administrateur ;
+- consulter les AuditLogs ;
+- révoquer les sessions ;
+- gérer les paramètres sensibles.
+
+ADMIN
+
+Peut :
+
+- gérer les modules autorisés ;
+- modifier son propre profil ;
+- ne peut pas créer de super administrateur ;
+- ne peut pas modifier les permissions du super administrateur.
+
+FINANCE_MANAGER
+
+Peut gérer :
+
+- dons ;
+- transactions ;
+- preuves de paiement ;
+- remboursements ;
+- statistiques financières ;
+- rapports financiers.
+
+CONTENT_MANAGER
+
+Peut gérer :
+
+- textes ;
+- images ;
+- pages publiques ;
+- footer ;
+- header ;
+- paramètres éditoriaux.
+
+CAMPAIGN_MANAGER
+
+Peut gérer :
+
+- campagnes ;
+- objectifs ;
+- images ;
+- publications liées aux campagnes.
+
+EDITOR
+
+Peut gérer :
+
+- actualités ;
+- publications ;
+- brouillons ;
+- événements.
+
+REVIEWER
+
+Peut :
+
+- consulter ;
+- vérifier ;
+- approuver ou rejeter certains contenus selon les permissions.
+
+SUPPORT_MANAGER
+
+Peut gérer :
+
+- messages ;
+- contacts ;
+- demandes des utilisateurs ;
+- bénévoles ;
+- partenaires.
+
+==================================================
+3. PERMISSIONS
+==================================================
+
+Créer un système de permissions granulaires.
+
+Exemples :
+
+users.read
+users.create
+users.update
+users.delete
+
+admins.read
+admins.create
+admins.update
+admins.disable
+admins.delete
+admins.assign_roles
+admins.assign_permissions
+admins.revoke_sessions
+
+content.read
+content.manage
+
+campaigns.read
+campaigns.manage
+
+news.read
+news.create
+news.update
+news.delete
+news.publish
+
+donations.read
+donations.manage
+donations.approve
+donations.reject
+donations.refund
+donations.export
+
+payments.read
+payments.manage
+payments.verify
+
+reports.read
+reports.export
+
+audit.read
+
+settings.read
+settings.manage
+
+roles.read
+roles.create
+roles.update
+roles.delete
+
+Le backend doit vérifier les permissions pour chaque endpoint.
+
+Ne jamais se fier uniquement au frontend.
+
+==================================================
+4. MODÈLE USER
+==================================================
+
+Compléter le modèle User avec :
+
+- firstName ;
+- lastName ;
+- email ;
+- phone optionnel ;
+- password ;
+- avatarUrl optionnel ;
+- role ;
+- permissions ;
+- isActive ;
+- isVerified ;
+- mustChangePassword ;
+- preferredLanguage ;
+- timezone ;
+- notificationPreferences ;
+- lastLoginAt ;
+- passwordChangedAt ;
+- createdBy optionnel ;
+- updatedBy optionnel ;
+- deletedAt optionnel ;
+- createdAt ;
+- updatedAt.
+
+Ne jamais retourner le mot de passe.
+
+Utiliser select: false pour password.
+
+==================================================
+5. MODÈLE ROLE
+==================================================
+
+Créer un modèle Role séparé.
+
+Champs :
+
+- name ;
+- code ;
+- description ;
+- permissions ;
+- isSystem ;
+- isActive ;
+- createdBy ;
+- updatedBy ;
+- createdAt ;
+- updatedAt.
+
+Exemples :
+
+{
+  name: "Responsable financier",
+  code: "finance_manager",
+  permissions: [
+    "donations.read",
+    "donations.manage",
+    "donations.approve",
+    "donations.reject",
+    "reports.export"
+  ]
+}
+
+Les rôles système comme super_admin ne doivent pas pouvoir être supprimés.
+
+==================================================
+6. PROFIL ADMINISTRATEUR
+==================================================
+
+Créer une page :
+
+/admin/profil
+
+Afficher :
+
+- photo ;
+- prénom ;
+- nom ;
+- email ;
+- téléphone ;
+- rôle ;
+- permissions ;
+- date de création ;
+- dernière connexion ;
+- statut ;
+- langue ;
+- fuseau horaire.
+
+Créer des onglets :
+
+- Informations personnelles
+- Sécurité
+- Préférences
+- Sessions actives
+
+==================================================
+7. MODIFICATION DES INFORMATIONS
+==================================================
+
+Créer un formulaire pour modifier :
+
+- prénom ;
+- nom ;
+- email ;
+- téléphone ;
+- avatar ;
+- langue ;
+- fuseau horaire.
+
+Validation Zod :
+
+- prénom obligatoire ;
+- nom obligatoire ;
+- email valide ;
+- téléphone optionnel mais validé ;
+- avatar image uniquement ;
+- taille maximale 3 Mo.
+
+Si l’email change :
+
+- demander le mot de passe actuel ;
+- envoyer un email de vérification ;
+- ne pas activer la nouvelle adresse avant confirmation ;
+- empêcher les doublons ;
+- journaliser l’action.
+
+==================================================
+8. MODIFICATION DU MOT DE PASSE
+==================================================
+
+Créer une section sécurité avec :
+
+- mot de passe actuel ;
+- nouveau mot de passe ;
+- confirmation ;
+- bouton afficher/masquer ;
+- indicateur de robustesse.
+
+Règles :
+
+- minimum 10 caractères ;
+- au moins une majuscule ;
+- une minuscule ;
+- un chiffre ;
+- un caractère spécial ;
+- nouveau mot de passe différent de l’ancien ;
+- confirmation identique.
+
+Backend :
+
+- vérifier l’ancien mot de passe ;
+- hacher le nouveau mot de passe ;
+- mettre à jour passwordChangedAt ;
+- révoquer les autres refresh tokens ;
+- conserver éventuellement la session actuelle ;
+- envoyer un email de sécurité ;
+- créer un AuditLog.
+
+==================================================
+9. SESSIONS ACTIVES
+==================================================
+
+Créer une page ou section affichant :
+
+- appareil ;
+- navigateur ;
+- adresse IP ;
+- localisation approximative optionnelle ;
+- date de création ;
+- dernière activité ;
+- session actuelle ou non.
+
+Actions :
+
+- déconnecter une session ;
+- déconnecter toutes les autres sessions ;
+- déconnecter toutes les sessions.
+
+Créer les routes :
+
+GET /api/auth/sessions
+DELETE /api/auth/sessions/:id
+DELETE /api/auth/sessions
+POST /api/auth/sessions/revoke-others
+
+==================================================
+10. CRÉATION D’UN ADMINISTRATEUR
+==================================================
+
+Créer une page :
+
+/admin/administrateurs/nouveau
+
+Accessible uniquement au super_admin ou à un utilisateur disposant de :
+
+admins.create
+
+Formulaire :
+
+- prénom ;
+- nom ;
+- email ;
+- téléphone ;
+- rôle ;
+- permissions supplémentaires ;
+- statut actif ;
+- langue ;
+- fuseau horaire ;
+- méthode de création du mot de passe.
+
+Options de mot de passe :
+
+A. générer un mot de passe temporaire ;
+B. envoyer un lien sécurisé de création de mot de passe.
+
+Option recommandée :
+
+- créer le compte sans mot de passe définitif ;
+- envoyer un lien d’activation ;
+- exiger que l’utilisateur définisse son mot de passe ;
+- définir mustChangePassword = true.
+
+==================================================
+11. INVITATION ADMINISTRATEUR
+==================================================
+
+Créer un système d’invitation.
+
+Modèle AdminInvitation :
+
+- email ;
+- firstName ;
+- lastName ;
+- role ;
+- permissions ;
+- tokenHash ;
+- expiresAt ;
+- status ;
+- invitedBy ;
+- acceptedAt ;
+- createdAt.
+
+Statuts :
+
+- pending
+- accepted
+- expired
+- revoked
+
+Flux :
+
+1. le super administrateur invite un responsable ;
+2. le backend crée un token sécurisé ;
+3. le token brut est envoyé par email ;
+4. seul le hash est conservé en base ;
+5. le lien expire après 24 ou 48 heures ;
+6. l’invité définit son mot de passe ;
+7. le compte devient actif ;
+8. l’invitation passe à accepted ;
+9. un AuditLog est créé.
+
+==================================================
+12. LISTE DES ADMINISTRATEURS
+==================================================
+
+Créer une page :
+
+/admin/administrateurs
+
+Afficher :
+
+- avatar ;
+- nom ;
+- email ;
+- rôle ;
+- permissions principales ;
+- statut ;
+- dernière connexion ;
+- date de création ;
+- créateur ;
+- actions.
+
+Filtres :
+
+- recherche ;
+- rôle ;
+- statut ;
+- actif/inactif ;
+- invitation en attente ;
+- date ;
+- dernière connexion.
+
+Actions :
+
+- voir ;
+- modifier ;
+- changer de rôle ;
+- modifier les permissions ;
+- désactiver ;
+- réactiver ;
+- révoquer les sessions ;
+- envoyer un lien de réinitialisation ;
+- renvoyer l’invitation ;
+- supprimer ou archiver.
+
+==================================================
+13. DÉTAIL D’UN ADMINISTRATEUR
+==================================================
+
+Créer :
+
+/admin/administrateurs/:id
+
+Afficher :
+
+- informations générales ;
+- rôle ;
+- permissions ;
+- sessions actives ;
+- activité récente ;
+- modules accessibles ;
+- date de création ;
+- dernière connexion ;
+- actions administratives récentes.
+
+==================================================
+14. MODIFICATION D’UN ADMINISTRATEUR
+==================================================
+
+Permettre de modifier :
+
+- prénom ;
+- nom ;
+- téléphone ;
+- rôle ;
+- permissions ;
+- statut ;
+- langue ;
+- fuseau horaire.
+
+Interdictions :
+
+- un admin ne peut pas s’attribuer lui-même super_admin ;
+- un admin ne peut pas retirer le rôle du dernier super_admin actif ;
+- un super_admin ne peut pas supprimer son propre compte sans transfert de responsabilité ;
+- un utilisateur ne peut pas modifier un administrateur de niveau supérieur ;
+- un admin ne peut pas modifier les permissions hors de son propre périmètre.
+
+==================================================
+15. ACTIVATION ET DÉSACTIVATION
+==================================================
+
+Lorsqu’un compte est désactivé :
+
+- isActive = false ;
+- révoquer toutes les sessions ;
+- empêcher toute nouvelle connexion ;
+- conserver les données ;
+- ajouter une raison ;
+- créer un AuditLog ;
+- envoyer éventuellement un email.
+
+Créer une modale demandant :
+
+- raison ;
+- durée facultative ;
+- confirmation.
+
+==================================================
+16. SUPPRESSION OU ARCHIVAGE
+==================================================
+
+Préférer un soft delete.
+
+Ajouter :
+
+- deletedAt ;
+- deletedBy ;
+- deletionReason.
+
+Ne pas supprimer définitivement les traces administratives ou financières.
+
+Empêcher la suppression :
+
+- du dernier super_admin actif ;
+- d’un administrateur ayant des actions financières non transférées ;
+- de son propre compte si aucun autre super_admin n’existe.
+
+==================================================
+17. RÉINITIALISATION DU MOT DE PASSE
+==================================================
+
+Le super administrateur peut :
+
+- envoyer un lien de réinitialisation ;
+- forcer mustChangePassword = true ;
+- révoquer les sessions ;
+- ne jamais voir le nouveau mot de passe.
+
+Ne pas afficher ni stocker un mot de passe temporaire en clair dans les logs.
+
+==================================================
+18. API PROFIL
+==================================================
+
+Créer :
+
+GET /api/admin/profile
+
+PATCH /api/admin/profile
+
+PATCH /api/admin/profile/email
+
+PATCH /api/admin/profile/password
+
+POST /api/admin/profile/avatar
+
+DELETE /api/admin/profile/avatar
+
+GET /api/admin/profile/sessions
+
+DELETE /api/admin/profile/sessions/:id
+
+DELETE /api/admin/profile/sessions
+
+==================================================
+19. API ADMINISTRATEURS
+==================================================
+
+Créer :
+
+GET /api/admin/admins
+
+GET /api/admin/admins/:id
+
+POST /api/admin/admins
+
+PATCH /api/admin/admins/:id
+
+PATCH /api/admin/admins/:id/role
+
+PATCH /api/admin/admins/:id/permissions
+
+PATCH /api/admin/admins/:id/status
+
+POST /api/admin/admins/:id/send-password-reset
+
+POST /api/admin/admins/:id/revoke-sessions
+
+DELETE /api/admin/admins/:id
+
+POST /api/admin/admin-invitations
+
+GET /api/admin/admin-invitations
+
+POST /api/admin/admin-invitations/:id/resend
+
+POST /api/admin/admin-invitations/:id/revoke
+
+POST /api/admin/admin-invitations/accept
+
+==================================================
+20. API RÔLES
+==================================================
+
+Créer :
+
+GET /api/admin/roles
+
+GET /api/admin/roles/:id
+
+POST /api/admin/roles
+
+PATCH /api/admin/roles/:id
+
+DELETE /api/admin/roles/:id
+
+GET /api/admin/permissions
+
+Ne retourner que les permissions que l’utilisateur connecté est autorisé à attribuer.
+
+==================================================
+21. INTERFACE FRONTEND
+==================================================
+
+Créer les pages :
+
+- AdminProfilePage.tsx
+- AdminSecurityPage.tsx
+- AdminSessionsPage.tsx
+- AdministratorsPage.tsx
+- AdministratorDetailsPage.tsx
+- CreateAdministratorPage.tsx
+- EditAdministratorPage.tsx
+- RolesPage.tsx
+- CreateRolePage.tsx
+- EditRolePage.tsx
+- InvitationsPage.tsx
+- AcceptAdminInvitationPage.tsx
+
+Créer les composants :
+
+- ProfileForm.tsx
+- ChangePasswordForm.tsx
+- AvatarUploader.tsx
+- ActiveSessionsList.tsx
+- AdministratorTable.tsx
+- AdministratorCard.tsx
+- RoleSelector.tsx
+- PermissionMatrix.tsx
+- InviteAdministratorModal.tsx
+- DisableAdministratorModal.tsx
+- RevokeSessionsModal.tsx
+- RoleForm.tsx
+- PermissionBadge.tsx
+
+==================================================
+22. MATRICE DE PERMISSIONS
+==================================================
+
+Créer une interface claire regroupant les permissions par module.
+
+Exemple :
+
+Utilisateurs
+[ ] Lire
+[ ] Créer
+[ ] Modifier
+[ ] Supprimer
+
+Dons
+[ ] Lire
+[ ] Gérer
+[ ] Approuver
+[ ] Rejeter
+[ ] Rembourser
+[ ] Exporter
+
+Contenu
+[ ] Lire
+[ ] Modifier
+
+Campagnes
+[ ] Lire
+[ ] Gérer
+
+Afficher :
+
+- permission héritée du rôle ;
+- permission ajoutée manuellement ;
+- permission non modifiable ;
+- résumé final.
+
+==================================================
+23. RTK QUERY
+==================================================
+
+Créer :
+
+adminProfileApi.ts
+
+Endpoints :
+
+- getProfile ;
+- updateProfile ;
+- changeEmail ;
+- changePassword ;
+- uploadAvatar ;
+- getSessions ;
+- revokeSession ;
+- revokeAllSessions.
+
+Créer :
+
+administratorsApi.ts
+
+Endpoints :
+
+- getAdministrators ;
+- getAdministratorById ;
+- createAdministrator ;
+- updateAdministrator ;
+- updateAdministratorRole ;
+- updateAdministratorPermissions ;
+- updateAdministratorStatus ;
+- revokeAdministratorSessions ;
+- sendPasswordReset ;
+- deleteAdministrator ;
+- getInvitations ;
+- createInvitation ;
+- resendInvitation ;
+- revokeInvitation.
+
+Créer :
+
+rolesApi.ts
+
+Endpoints :
+
+- getRoles ;
+- createRole ;
+- updateRole ;
+- deleteRole ;
+- getPermissions.
+
+==================================================
+24. SÉCURITÉ
+==================================================
+
+Ajouter :
+
+- RBAC côté serveur ;
+- contrôle de hiérarchie des rôles ;
+- rate limiting ;
+- validation Zod ;
+- cookies HttpOnly ;
+- rotation des refresh tokens ;
+- révocation des sessions ;
+- AuditLog ;
+- vérification du mot de passe actuel ;
+- tokens d’invitation à usage unique ;
+- expiration des tokens ;
+- hashage des tokens ;
+- protection contre l’élévation de privilèges ;
+- protection contre les attaques CSRF si nécessaire ;
+- détection des changements sensibles ;
+- notification de sécurité.
+
+Ne jamais :
+
+- stocker un mot de passe en clair ;
+- retourner les secrets JWT ;
+- afficher les refresh tokens ;
+- autoriser un admin à créer un super_admin sans permission ;
+- autoriser la suppression du dernier super_admin ;
+- faire confiance aux permissions envoyées par le frontend.
+
+==================================================
+25. AUDIT LOG
+==================================================
+
+Journaliser :
+
+- modification de profil ;
+- changement d’email ;
+- changement de mot de passe ;
+- création d’un administrateur ;
+- invitation ;
+- changement de rôle ;
+- changement de permissions ;
+- activation ;
+- désactivation ;
+- suppression ;
+- révocation des sessions ;
+- réinitialisation du mot de passe.
+
+Champs :
+
+- actor ;
+- action ;
+- targetUser ;
+- previousValues ;
+- newValues ;
+- ipAddress ;
+- userAgent ;
+- createdAt.
+
+Ne pas enregistrer les mots de passe ni les tokens.
+
+==================================================
+26. EMAILS
+==================================================
+
+Créer les emails suivants :
+
+- invitation administrateur ;
+- activation du compte ;
+- changement d’email ;
+- email vérifié ;
+- mot de passe modifié ;
+- réinitialisation demandée ;
+- compte désactivé ;
+- rôle modifié ;
+- permissions modifiées ;
+- sessions révoquées.
+
+==================================================
+27. RESPONSIVE
+==================================================
+
+Toutes les pages doivent fonctionner sur :
+
+- desktop ;
+- tablette ;
+- smartphone.
+
+Mobile :
+
+- formulaires en une colonne ;
+- tableau remplacé par cartes ou scroll local ;
+- matrice de permissions repliable ;
+- boutons pleine largeur ;
+- sidebar en drawer ;
+- modales adaptées ;
+- aucun scroll horizontal global.
+
+==================================================
+28. ACCESSIBILITÉ
+==================================================
+
+Ajouter :
+
+- labels ;
+- aria-labels ;
+- focus visible ;
+- navigation clavier ;
+- modales accessibles ;
+- contraste suffisant ;
+- messages d’erreur associés aux champs ;
+- confirmations explicites.
+
+==================================================
+29. TESTS
+==================================================
+
+Créer des tests pour :
+
+- modification du profil ;
+- changement d’email ;
+- mauvais mot de passe actuel ;
+- changement de mot de passe ;
+- révocation des sessions ;
+- création d’un administrateur ;
+- invitation ;
+- invitation expirée ;
+- changement de rôle ;
+- ajout de permissions ;
+- tentative d’élévation de privilèges ;
+- désactivation ;
+- suppression du dernier super_admin ;
+- accès non autorisé ;
+- soft delete ;
+- audit log.
+
+==================================================
+30. LIVRABLES
+==================================================
+
+Fournir :
+
+1. architecture frontend ;
+2. architecture backend ;
+3. modèles Mongoose ;
+4. types TypeScript ;
+5. validations Zod ;
+6. services ;
+7. contrôleurs ;
+8. routes ;
+9. middlewares RBAC ;
+10. gestion des sessions ;
+11. invitations ;
+12. gestion des rôles ;
+13. matrice de permissions ;
+14. pages React ;
+15. RTK Query ;
+16. formulaires ;
+17. emails ;
+18. AuditLog ;
+19. tests ;
+20. README ;
+21. .env.example sans secret ;
+22. guide d’utilisation du super administrateur.
+
+==================================================
+31. MÉTHODE DE RÉALISATION
+==================================================
+
+Ne génère pas tout en un seul fichier.
+
+Travaille par phases.
+
+PHASE 1
+
+- audit du modèle User ;
+- stratégie RBAC ;
+- modèles Role et AdminInvitation ;
+- endpoints ;
+- validations ;
+- règles de hiérarchie.
+
+PHASE 2
+
+- profil administrateur ;
+- modification des informations ;
+- avatar ;
+- changement de mot de passe ;
+- sessions actives.
+
+PHASE 3
+
+- liste des administrateurs ;
+- création ;
+- modification ;
+- activation ;
+- désactivation ;
+- révocation des sessions.
+
+PHASE 4
+
+- invitations ;
+- création du mot de passe ;
+- emails ;
+- expiration ;
+- renvoi ;
+- révocation.
+
+PHASE 5
+
+- rôles personnalisés ;
+- matrice de permissions ;
+- contrôle de hiérarchie ;
+- AuditLog.
+
+PHASE 6
+
+- responsive ;
+- sécurité ;
+- tests ;
+- documentation.
+
+Pour chaque phase :
+
+- expliquer brièvement les choix ;
+- afficher l’arborescence ;
+- fournir les commandes ;
+- générer les fichiers complets ;
+- vérifier les imports ;
+- vérifier les types ;
+- éviter le pseudo-code ;
+- indiquer comment tester.
+
+==================================================
+32. PREMIÈRE TÂCHE
+==================================================
+
+Commence par analyser mon projet actuel.
+
+Demande-moi les fichiers suivants si nécessaire :
+
+Backend :
+
+- User.model.ts
+- auth.routes.ts
+- auth.controller.ts
+- auth.service.ts
+- auth.middleware.ts
+- role.middleware.ts
+- refresh token ou session model
+- AuditLog.model.ts
+- app.ts ou server.ts
+
+Frontend :
+
+- AdminShell.tsx
+- authApi.ts
+- authSlice.ts
+- authSelectors.ts
+- ProtectedRoute.tsx
+- AdminRoute.tsx
+- store.ts
+- baseApi.ts
+- routes admin.
+
+Ensuite, fournis uniquement :
+
+1. l’audit de l’existant ;
+2. les risques de sécurité ;
+3. les modèles recommandés ;
+4. les rôles et permissions ;
+5. les endpoints ;
+6. les règles de hiérarchie ;
+7. l’architecture des pages ;
+8. le plan d’implémentation.
+
+Attends ma validation avant de générer le code complet.

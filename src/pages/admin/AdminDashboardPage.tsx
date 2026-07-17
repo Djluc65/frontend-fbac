@@ -12,6 +12,7 @@ import { getAdminQuickAccessNavigation } from '../../components/admin/adminNavig
 import { getAdminCapabilities } from '../../components/admin/adminPermissions'
 import { useAppSelector } from '../../app/hooks'
 import { selectCurrentUser } from '../../features/auth/authSelectors'
+import { formatPermissionLabel, formatRoleLabel } from '../../features/admin/adminDisplay'
 
 const AdminDashboardPage = () => {
   const user = useAppSelector(selectCurrentUser)
@@ -44,7 +45,7 @@ const AdminDashboardPage = () => {
               </div>
               <div className="rounded-2xl bg-slate-50 px-4 py-3">
                 <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Rôle</dt>
-                <dd className="mt-1 font-medium capitalize text-slate-900">{user?.role}</dd>
+                <dd className="mt-1 font-medium text-slate-900">{formatRoleLabel(user?.role)}</dd>
               </div>
             </dl>
           </AdminCard>
@@ -62,7 +63,7 @@ const AdminDashboardPage = () => {
                     className="inline-flex items-center gap-2 rounded-full bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700"
                   >
                     <BadgeCheck className="h-[18px] w-[18px]" />
-                    {permission}
+                    {formatPermissionLabel(permission)}
                   </span>
                 ))}
               </div>

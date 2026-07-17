@@ -2,6 +2,8 @@ import { baseApi } from '../../services/baseApi'
 import { clearCredentials, setAccessToken, setCredentials } from './authSlice'
 import type {
   AuthUser,
+  ForgotPasswordPayload,
+  ForgotPasswordResponse,
   LoginPayload,
   NormalizedAuthResponse,
   RefreshResponse,
@@ -127,6 +129,13 @@ export const authApi = baseApi.injectEndpoints({
         }
       },
     }),
+    forgotAdminPassword: builder.mutation<ForgotPasswordResponse, ForgotPasswordPayload>({
+      query: (body) => ({
+        url: '/auth/admin/forgot-password',
+        method: 'POST',
+        body,
+      }),
+    }),
   }),
 })
 
@@ -135,4 +144,5 @@ export const {
   useGetCurrentUserQuery,
   useRefreshSessionMutation,
   useLogoutMutation,
+  useForgotAdminPasswordMutation,
 } = authApi

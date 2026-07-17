@@ -184,7 +184,7 @@ const AdminLoginPage = () => {
 
                 <div className="flex items-center justify-between gap-4">
                   <Link
-                    to="/contact"
+                    to="/admin/forgot-password"
                     className="text-sm font-medium text-orange-700 transition hover:text-orange-800"
                   >
                     Mot de passe oublié ?

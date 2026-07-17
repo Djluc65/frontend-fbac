@@ -9,6 +9,15 @@ export interface LoginPayload {
   password: string
 }
 
+export interface ForgotPasswordPayload {
+  email: string
+}
+
+export interface ForgotPasswordResponse {
+  success: boolean
+  message: string
+}
+
 export interface AuthState {
   user: AuthUser | null
   accessToken: string | null
@@ -31,6 +40,11 @@ export const ADMIN_PANEL_ROLES = [
   'finance_manager',
   'donations_manager',
   'content_editor',
+  'content_manager',
+  'campaign_manager',
+  'editor',
+  'reviewer',
+  'support_manager',
 ] as const
 
 export const canAccessAdminPanel = (user: AuthUser | null | undefined) => {
@@ -45,6 +59,7 @@ export const canAccessAdminPanel = (user: AuthUser | null | undefined) => {
     permissions.includes('*') ||
     permissions.includes('content.manage') ||
     permissions.includes('staff.manage') ||
-    permissions.includes('dashboard.read')
+    permissions.includes('dashboard.read') ||
+    permissions.includes('admins.read')
   )
 }

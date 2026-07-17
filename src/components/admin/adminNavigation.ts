@@ -5,12 +5,15 @@ import {
   FileBadge2,
   FilePenLine,
   LayoutDashboard,
+  Layers3,
   Megaphone,
   Newspaper,
   ReceiptText,
   ScrollText,
   ShieldCheck,
   Sigma,
+  UserCog2,
+  UserRound,
   Wallet,
   WalletCards,
 } from 'lucide-react'
@@ -30,6 +33,33 @@ const adminNavigationConfig = (capabilities: AdminCapabilities): AdminNavigation
     label: 'Dashboard',
     icon: LayoutDashboard,
     visible: true,
+  },
+  {
+    to: '/admin/profil',
+    label: 'Mon profil',
+    icon: UserRound,
+    visible: true,
+    matchPrefixes: ['/admin/profil/'],
+  },
+  {
+    to: '/admin/administrateurs',
+    label: 'Administrateurs',
+    icon: UserCog2,
+    visible: capabilities.canManageAdministrators,
+    matchPrefixes: ['/admin/administrateurs/'],
+  },
+  {
+    to: '/admin/roles',
+    label: 'Rôles',
+    icon: Layers3,
+    visible: capabilities.canManageRoles,
+    matchPrefixes: ['/admin/roles/'],
+  },
+  {
+    to: '/admin/invitations',
+    label: 'Invitations',
+    icon: ShieldCheck,
+    visible: capabilities.canManageAdministrators,
   },
   {
     to: '/admin/contenu',
@@ -124,6 +154,8 @@ export const getAdminQuickAccessNavigation = (capabilities: AdminCapabilities) =
     .filter((item) =>
       [
         '/admin/contenu',
+        '/admin/administrateurs',
+        '/admin/roles',
         '/admin/campagnes',
         '/admin/publications',
         '/admin/paiements',
@@ -137,6 +169,16 @@ export const getAdminQuickAccessNavigation = (capabilities: AdminCapabilities) =
           title: 'Gérer le contenu',
           description: 'Textes, équipes et sections clés du site public.',
           buttonLabel: 'Ouvrir',
+        },
+        '/admin/administrateurs': {
+          title: 'Administrateurs',
+          description: 'Rôles, permissions, statuts et invitations.',
+          buttonLabel: 'Gérer',
+        },
+        '/admin/roles': {
+          title: 'Rôles',
+          description: 'Matrice de permissions et rôles personnalisés.',
+          buttonLabel: 'Gérer',
         },
         '/admin/campagnes': {
           title: 'Campagnes',

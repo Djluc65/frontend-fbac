@@ -17,7 +17,20 @@ import AdminContentPage from '../pages/admin/AdminContentPage'
 import AdminPaymentMethodsPage from '../pages/admin/AdminPaymentMethodsPage'
 import AdminPaymentProofsPage from '../pages/admin/AdminPaymentProofsPage'
 import AdminLoginPage from '../pages/auth/AdminLoginPage'
+import AdminForgotPasswordPage from '../pages/auth/AdminForgotPasswordPage'
 import AdminNewsPage from '../pages/admin/AdminNewsPage'
+import AdminProfilePage from '../pages/admin/AdminProfilePage'
+import AdminSecurityPage from '../pages/admin/AdminSecurityPage'
+import AdminSessionsPage from '../pages/admin/AdminSessionsPage'
+import AdministratorsPage from '../pages/admin/AdministratorsPage'
+import AdministratorDetailsPage from '../pages/admin/AdministratorDetailsPage'
+import CreateAdministratorPage from '../pages/admin/CreateAdministratorPage'
+import EditAdministratorPage from '../pages/admin/EditAdministratorPage'
+import RolesPage from '../pages/admin/RolesPage'
+import CreateRolePage from '../pages/admin/CreateRolePage'
+import EditRolePage from '../pages/admin/EditRolePage'
+import InvitationsPage from '../pages/admin/InvitationsPage'
+import AcceptAdminInvitationPage from '../pages/admin/AcceptAdminInvitationPage'
 import DonationDashboardPage from '../pages/admin/DonationDashboardPage'
 import DonationsPage from '../pages/admin/DonationsPage'
 import DonationDetailsPage from '../pages/admin/DonationDetailsPage'
@@ -36,6 +49,8 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/admin/login" element={<AdminLoginPage />} />
+      <Route path="/admin/forgot-password" element={<AdminForgotPasswordPage />} />
+      <Route path="/admin/invitations/accept" element={<AcceptAdminInvitationPage />} />
 
       <Route
         path="/admin"
@@ -49,6 +64,17 @@ const AppRoutes = () => {
       >
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboardPage />} />
+        <Route path="profil" element={<AdminProfilePage />} />
+        <Route path="profil/securite" element={<AdminSecurityPage />} />
+        <Route path="profil/sessions" element={<AdminSessionsPage />} />
+        <Route path="administrateurs" element={<AdministratorsPage />} />
+        <Route path="administrateurs/nouveau" element={<CreateAdministratorPage />} />
+        <Route path="administrateurs/:id" element={<AdministratorDetailsPage />} />
+        <Route path="administrateurs/:id/modifier" element={<EditAdministratorPage />} />
+        <Route path="roles" element={<RolesPage />} />
+        <Route path="roles/nouveau" element={<CreateRolePage />} />
+        <Route path="roles/:id/modifier" element={<EditRolePage />} />
+        <Route path="invitations" element={<InvitationsPage />} />
         <Route path="contenu" element={<AdminContentPage />} />
         <Route path="campagnes" element={<AdminCampaignsPage />} />
         <Route path="publications" element={<AdminNewsPage />} />

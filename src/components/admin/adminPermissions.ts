@@ -15,6 +15,16 @@ export const getAdminCapabilities = (permissions: string[] | undefined) => ({
   canManagePublications: hasPermission(permissions, ['news.create', 'news.update', 'news.delete']),
   canManageContent: hasPermission(permissions, ['content.manage']),
   canManagePayments: hasPermission(permissions, ['donations.manage', 'donations.read']),
+  canManageAdministrators: hasPermission(permissions, [
+    'admins.read',
+    'admins.create',
+    'admins.update',
+    'admins.assign_roles',
+    'admins.assign_permissions',
+    'roles.read',
+  ]),
+  canManageRoles: hasPermission(permissions, ['roles.read', 'roles.create', 'roles.update', 'roles.delete']),
+  canManageAudit: hasPermission(permissions, ['audit.read']),
 })
 
 export type AdminCapabilities = ReturnType<typeof getAdminCapabilities>
