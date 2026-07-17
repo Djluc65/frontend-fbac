@@ -1,5 +1,6 @@
 import { Eye } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import AdminStatusBadge from '../admin/AdminStatusBadge'
 import type { Donation } from '../../features/donations/donationTypes'
 
 interface DonationTableProps {
@@ -35,9 +36,51 @@ const paymentLabels: Record<string, string> = {
   CARD: 'Carte',
 }
 
+const getDonationStatusTone = (status: string) => {
+  if (status === 'COMPLETED') {
+    return 'success' as const
+  }
+
+  if (status === 'UNDER_REVIEW' || status === 'PROCESSING' || status === 'PENDING') {
+    return 'warning' as const
+  }
+
+  if (status === 'FAILED' || status === 'REJECTED' || status === 'CANCELLED') {
+    return 'danger' as const
+  }
+
+  return 'neutral' as const
+}
+
+const getProofStatusTone = (status: string) => {
+  if (status === 'APPROVED') {
+    return 'success' as const
+  }
+
+  if (status === 'PENDING_REVIEW') {
+    return 'warning' as const
+  }
+
+  if (status === 'REJECTED') {
+    return 'danger' as const
+  }
+
+  return 'neutral' as const
+}
+
 const DonationTable = ({ donations }: DonationTableProps) => {
+  if (donations.length === 0) {
+    return (
+      <section className="rounded-[24px] border border-slate-200/80 bg-white p-5 shadow-panel sm:p-6">
+        <div className="rounded-[20px] border border-dashed border-slate-200 bg-slate-50 px-5 py-8 text-center text-sm leading-6 text-slate-500">
+          Aucun don ne correspond aux filtres actuellement appliqués.
+        </div>
+      </section>
+    )
+  }
+
   return (
-    <section className="rounded-3xl bg-white p-5 shadow-panel">
+    <section className="rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-panel sm:p-5">
       <div className="overflow-x-auto">
         <table className="hidden min-w-full text-left text-sm lg:table">
           <thead>
@@ -62,15 +105,25 @@ const DonationTable = ({ donations }: DonationTableProps) => {
                   </div>
                   <div className="text-xs text-slate-500">{donation.donorEmail}</div>
                 </td>
-                <td className="px-3 py-4">
+                <td className="px-3 py-4 font-semibold text-slate-900">
                   {new Intl.NumberFormat('fr-FR', {
                     style: 'currency',
                     currency: donation.currency,
                   }).format(donation.amount)}
                 </td>
                 <td className="px-3 py-4">{paymentLabels[donation.paymentMethod] ?? donation.paymentMethod}</td>
-                <td className="px-3 py-4">{statusLabels[donation.status] ?? donation.status}</td>
-                <td className="px-3 py-4">{proofStatusLabels[donation.proofStatus] ?? donation.proofStatus}</td>
+                <td className="px-3 py-4">
+                  <AdminStatusBadge
+                    label={statusLabels[donation.status] ?? donation.status}
+                    tone={getDonationStatusTone(donation.status)}
+                  />
+                </td>
+                <td className="px-3 py-4">
+                  <AdminStatusBadge
+                    label={proofStatusLabels[donation.proofStatus] ?? donation.proofStatus}
+                    tone={getProofStatusTone(donation.proofStatus)}
+                  />
+                </td>
                 <td className="px-3 py-4">{new Date(donation.createdAt).toLocaleDateString('fr-FR')}</td>
                 <td className="px-3 py-4">
                   <Link
@@ -88,22 +141,29 @@ const DonationTable = ({ donations }: DonationTableProps) => {
 
         <div className="space-y-4 lg:hidden">
           {donations.map((donation) => (
-            <article key={donation._id} className="rounded-2xl border border-slate-200 p-4">
-              <div className="flex items-start justify-between gap-3">
-                <div>
-                  <p className="font-semibold text-slate-900">{donation.reference}</p>
-                  <p className="text-sm text-slate-500">
+            <article
+              key={donation._id}
+              className="rounded-[24px] border border-slate-200 bg-slate-50/70 p-4 transition duration-200 hover:border-orange-200 hover:bg-orange-50/70"
+            >
+              <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold uppercase tracking-[0.18em] text-slate-400">
+                    {donation.reference}
+                  </p>
+                  <p className="mt-1 break-words text-base font-semibold text-slate-900">
                     {donation.donorFirstName} {donation.donorLastName}
                   </p>
+                  <p className="mt-1 break-words text-sm text-slate-500">{donation.donorEmail}</p>
                 </div>
-                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
-                  {statusLabels[donation.status] ?? donation.status}
-                </span>
+                <AdminStatusBadge
+                  label={statusLabels[donation.status] ?? donation.status}
+                  tone={getDonationStatusTone(donation.status)}
+                />
               </div>
 
-              <dl className="mt-4 grid gap-2 text-sm text-slate-600">
-                <div>
-                  <dt className="font-medium text-slate-900">Montant</dt>
+              <dl className="mt-4 grid gap-3 text-sm text-slate-600 min-[430px]:grid-cols-2">
+                <div className="rounded-2xl bg-white px-4 py-3">
+                  <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Montant</dt>
                   <dd>
                     {new Intl.NumberFormat('fr-FR', {
                       style: 'currency',
@@ -111,19 +171,28 @@ const DonationTable = ({ donations }: DonationTableProps) => {
                     }).format(donation.amount)}
                   </dd>
                 </div>
-                <div>
-                  <dt className="font-medium text-slate-900">Paiement</dt>
+                <div className="rounded-2xl bg-white px-4 py-3">
+                  <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Paiement</dt>
                   <dd>{paymentLabels[donation.paymentMethod] ?? donation.paymentMethod}</dd>
                 </div>
-                <div>
-                  <dt className="font-medium text-slate-900">Preuve</dt>
-                  <dd>{proofStatusLabels[donation.proofStatus] ?? donation.proofStatus}</dd>
+                <div className="rounded-2xl bg-white px-4 py-3">
+                  <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Preuve</dt>
+                  <dd className="mt-1">
+                    <AdminStatusBadge
+                      label={proofStatusLabels[donation.proofStatus] ?? donation.proofStatus}
+                      tone={getProofStatusTone(donation.proofStatus)}
+                    />
+                  </dd>
+                </div>
+                <div className="rounded-2xl bg-white px-4 py-3">
+                  <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Date</dt>
+                  <dd>{new Date(donation.createdAt).toLocaleDateString('fr-FR')}</dd>
                 </div>
               </dl>
 
               <Link
                 to={`/admin/donations/${donation._id}`}
-                className="mt-4 inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600"
+                className="mt-4 inline-flex h-11 items-center gap-2 rounded-xl bg-orange-500 px-4 text-sm font-semibold text-white transition hover:bg-orange-600"
               >
                 <Eye className="h-4 w-4" />
                 Ouvrir le détail

@@ -93,13 +93,13 @@ const DonationDashboardPage = () => {
       title="Vue d’ensemble des dons"
       description="Suivez les principaux indicateurs de collecte, les paiements manuels à vérifier et l’évolution des dons confirmés."
       actions={
-        <label className="flex items-center gap-2 rounded-2xl bg-white/10 px-4 py-2 text-sm">
+        <label className="flex h-10 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 text-sm">
           <BarChart3 className="h-4 w-4" />
-          <span>Période</span>
+          <span className="hidden sm:inline">Période</span>
           <select
             value={period}
             onChange={(event) => setPeriod(event.target.value as DonationAnalyticsPeriod)}
-            className="rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm text-white outline-none"
+            className="min-w-0 rounded-xl border border-white/20 bg-white/10 px-3 py-2 text-sm text-white outline-none"
             aria-label="Choisir une période d’analyse"
           >
             {periodOptions.map((option) => (

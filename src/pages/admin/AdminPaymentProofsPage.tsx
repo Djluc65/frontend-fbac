@@ -12,6 +12,8 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 import AdminShell from '../../components/admin/AdminShell'
+import AdminCard from '../../components/admin/AdminCard'
+import AdminStatusBadge from '../../components/admin/AdminStatusBadge'
 import Button from '../../components/common/Button'
 import { useAppSelector } from '../../app/hooks'
 import { selectCurrentUser } from '../../features/auth/authSelectors'
@@ -62,6 +64,22 @@ const paymentMethodLabels: Record<PaymentMethodId, string> = {
   ON_SITE: 'Paiement sur place',
 }
 
+const getProofStatusTone = (status: PaymentProofRecord['status']) => {
+  if (status === 'APPROVED') {
+    return 'success' as const
+  }
+
+  if (status === 'PENDING_REVIEW') {
+    return 'warning' as const
+  }
+
+  if (status === 'REJECTED') {
+    return 'danger' as const
+  }
+
+  return 'neutral' as const
+}
+
 const extractDonationField = (proof: PaymentProofRecord | null, field: string) => {
   if (!proof || !proof.donation || typeof proof.donation !== 'object') {
     return undefined
@@ -76,7 +94,27 @@ const buildDonorDisplayName = (proof: PaymentProofRecord | null) => {
   return [firstName, lastName].filter(Boolean).join(' ') || 'Donateur inconnu'
 }
 
-const formatFileSize = (size: number) => `${(size / (1024 * 1024)).toFixed(size >= 1024 * 1024 ? 2 : 1)} Mo`
+const formatFileSize = (size: number) => {
+  if (size >= 1024 * 1024) {
+    return `${(size / (1024 * 1024)).toFixed(2)} Mo`
+  }
+
+  return `${Math.max(size / 1024, 0.1).toFixed(1)} Ko`
+}
+
+const formatDonationAmount = (proof: PaymentProofRecord | null) => {
+  const amount = extractDonationField(proof, 'amount')
+  const currency = extractDonationField(proof, 'currency')
+
+  if (typeof amount !== 'number' || typeof currency !== 'string') {
+    return 'N/A'
+  }
+
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency,
+  }).format(amount)
+}
 
 const AdminPaymentProofsPage = () => {
   const user = useAppSelector(selectCurrentUser)
@@ -184,42 +222,30 @@ const AdminPaymentProofsPage = () => {
       title="Paiements à vérifier"
       description="Vérifiez les références de transaction et les preuves transmises pour les virements, paiements Zelle et Cash App avant confirmation."
     >
-      <div className="space-y-6">
-        <section className="grid gap-4 xl:grid-cols-3">
-          <article className="rounded-3xl bg-white p-5 shadow-panel">
-            <div className="mb-3 inline-flex rounded-2xl bg-orange-100 p-3 text-orange-600">
-              <SearchCheck className="h-5 w-5" />
-            </div>
-            <p className="text-sm font-medium text-slate-500">En attente de revue</p>
-            <p className="mt-2 text-3xl font-bold text-slate-900">{pendingCount}</p>
-          </article>
-          <article className="rounded-3xl bg-white p-5 shadow-panel">
-            <div className="mb-3 inline-flex rounded-2xl bg-orange-100 p-3 text-orange-600">
-              <BadgeCheck className="h-5 w-5" />
-            </div>
-            <p className="text-sm font-medium text-slate-500">Méthodes couvertes</p>
-            <p className="mt-2 text-3xl font-bold text-slate-900">3</p>
-          </article>
-          <article className="rounded-3xl bg-white p-5 shadow-panel">
-            <div className="mb-3 inline-flex rounded-2xl bg-orange-100 p-3 text-orange-600">
-              <AlertTriangle className="h-5 w-5" />
-            </div>
-            <p className="text-sm font-medium text-slate-500">Chargement</p>
-            <p className="mt-2 text-3xl font-bold text-slate-900">{isFetching ? 'En cours' : 'Prêt'}</p>
-          </article>
+      <div className="space-y-4 sm:space-y-6">
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <AdminCard icon={SearchCheck} title="En attente de revue" description="Preuves nécessitant une action rapide.">
+            <p className="text-3xl font-bold text-slate-900">{pendingCount}</p>
+          </AdminCard>
+          <AdminCard icon={BadgeCheck} title="Méthodes couvertes" description="Virement, Zelle et Cash App.">
+            <p className="text-3xl font-bold text-slate-900">3</p>
+          </AdminCard>
+          <AdminCard icon={AlertTriangle} title="Chargement" description="État de synchronisation de la file d’attente.">
+            <p className="text-3xl font-bold text-slate-900">{isFetching ? 'En cours' : 'Prêt'}</p>
+          </AdminCard>
         </section>
 
-        <section className="grid gap-6 xl:grid-cols-[380px_minmax(0,1fr)]">
-          <article className="space-y-4 rounded-3xl bg-white p-5 shadow-panel">
-            <div className="flex items-center justify-between">
+        <section className="grid gap-4 xl:grid-cols-[360px_minmax(0,1fr)] xl:gap-6">
+          <article className="space-y-4 rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-panel sm:p-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="font-display text-2xl font-semibold text-slate-900">File d’attente</h2>
+                <h2 className="font-display text-xl font-semibold text-slate-900 sm:text-2xl">File d’attente</h2>
                 <p className="mt-1 text-sm text-slate-500">Sélectionnez un paiement pour afficher son détail.</p>
               </div>
               {isLoading ? <LoaderCircle className="h-5 w-5 animate-spin text-orange-500" /> : null}
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+            <div className="grid gap-3 min-[430px]:grid-cols-2 xl:grid-cols-1">
               <label className="space-y-2">
                 <span className="inline-flex items-center gap-2 text-sm font-semibold text-slate-700">
                   <Filter className="h-4 w-4 text-orange-500" />
@@ -256,14 +282,13 @@ const AdminPaymentProofsPage = () => {
             </div>
 
             {proofs.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-slate-200 p-6 text-center text-sm text-slate-500">
+              <div className="rounded-[20px] border border-dashed border-slate-200 bg-slate-50 px-5 py-8 text-center text-sm leading-6 text-slate-500">
                 Aucun paiement manuel ne correspond aux filtres sélectionnés.
               </div>
             ) : (
               <div className="space-y-3">
                 {proofs.map((proof) => {
                   const donationReference = extractDonationField(proof, 'reference')
-                  const amount = extractDonationField(proof, 'amount')
                   const email = extractDonationField(proof, 'donorEmail')
                   const active = selectedProof?._id === proof._id
 
@@ -272,24 +297,24 @@ const AdminPaymentProofsPage = () => {
                       key={proof._id}
                       type="button"
                       onClick={() => setSelectedProofId(proof._id)}
-                      className={`w-full rounded-3xl border p-4 text-left transition ${
-                        active ? 'border-orange-300 bg-orange-50' : 'border-slate-200 hover:border-orange-200'
+                      className={`w-full rounded-[24px] border p-4 text-left transition ${
+                        active
+                          ? 'border-orange-300 bg-orange-50 shadow-[inset_0_0_0_1px_rgba(249,115,22,0.12)]'
+                          : 'border-slate-200 bg-slate-50/60 hover:border-orange-200 hover:bg-orange-50/70'
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="font-semibold text-slate-900">{buildDonorDisplayName(proof)}</p>
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="break-words font-semibold text-slate-900">{buildDonorDisplayName(proof)}</p>
                           <p className="mt-1 text-sm text-slate-500">{email ? String(email) : 'Email indisponible'}</p>
                         </div>
-                        <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-orange-600">
-                          {proofStatusLabels[proof.status]}
-                        </span>
+                        <AdminStatusBadge label={proofStatusLabels[proof.status]} tone={getProofStatusTone(proof.status)} />
                       </div>
-                      <div className="mt-4 grid gap-2 text-sm text-slate-600">
-                        <p>Méthode : {paymentMethodLabels[proof.paymentMethod]}</p>
-                        <p>Référence : {proof.referenceProvided ?? 'Non fournie'}</p>
-                        <p>Don : {donationReference ? String(donationReference) : 'Inconnu'}</p>
-                        <p>Montant : {amount ? `${String(amount)} USD` : 'N/A'}</p>
+                      <div className="mt-4 grid gap-2 text-sm text-slate-600 min-[430px]:grid-cols-2 xl:grid-cols-1">
+                        <p className="break-words">Méthode : {paymentMethodLabels[proof.paymentMethod]}</p>
+                        <p className="break-words">Référence : {proof.referenceProvided ?? 'Non fournie'}</p>
+                        <p className="break-words">Don : {donationReference ? String(donationReference) : 'Inconnu'}</p>
+                        <p>Montant : {formatDonationAmount(proof)}</p>
                       </div>
                     </button>
                   )
@@ -298,27 +323,27 @@ const AdminPaymentProofsPage = () => {
             )}
           </article>
 
-          <article className="space-y-6 rounded-3xl bg-white p-5 shadow-panel">
+          <article className="space-y-5 rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-panel sm:space-y-6 sm:p-5">
             {!selectedProof ? (
-              <div className="rounded-3xl border border-dashed border-slate-200 p-8 text-center text-slate-500">
+              <div className="rounded-[20px] border border-dashed border-slate-200 bg-slate-50 px-5 py-8 text-center text-slate-500">
                 Sélectionnez un paiement dans la colonne de gauche pour afficher son détail.
               </div>
             ) : (
               <>
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div>
-                    <h2 className="font-display text-2xl font-semibold text-slate-900">Détail du paiement</h2>
+                    <h2 className="font-display text-xl font-semibold text-slate-900 sm:text-2xl">Détail du paiement</h2>
                     <p className="mt-1 text-sm text-slate-500">
                       Don {String(extractDonationField(selectedProof, 'reference') ?? 'inconnu')} ·{' '}
                       {paymentMethodLabels[selectedProof.paymentMethod]}
                     </p>
                   </div>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="grid grid-cols-1 gap-3 min-[430px]:grid-cols-2">
                     <a
                       href={selectedProof.fileUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-orange-300 hover:text-orange-600"
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:border-orange-300 hover:text-orange-600"
                     >
                       <Eye className="h-4 w-4" />
                       Ouvrir
@@ -326,7 +351,7 @@ const AdminPaymentProofsPage = () => {
                     <a
                       href={selectedProof.fileUrl}
                       download={selectedProof.originalFileName}
-                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-orange-300 hover:text-orange-600"
+                      className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:border-orange-300 hover:text-orange-600"
                     >
                       <Download className="h-4 w-4" />
                       Télécharger
@@ -335,34 +360,37 @@ const AdminPaymentProofsPage = () => {
                 </div>
 
                 <div className="grid gap-4 xl:grid-cols-2">
-                  <div className="rounded-3xl border border-slate-200 p-5">
-                    <h3 className="font-display text-xl font-semibold text-slate-900">Informations du don</h3>
+                  <div className="rounded-[24px] border border-slate-200 bg-slate-50/60 p-4 sm:p-5">
+                    <h3 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">Informations du don</h3>
                     <div className="mt-4 grid gap-3 text-sm text-slate-600">
                       <p><span className="font-semibold text-slate-900">Nom :</span> {buildDonorDisplayName(selectedProof)}</p>
                       <p><span className="font-semibold text-slate-900">Email :</span> {String(extractDonationField(selectedProof, 'donorEmail') ?? 'N/A')}</p>
-                      <p><span className="font-semibold text-slate-900">Montant :</span> {String(extractDonationField(selectedProof, 'amount') ?? 'N/A')} USD</p>
+                      <p><span className="font-semibold text-slate-900">Montant :</span> {formatDonationAmount(selectedProof)}</p>
                       <p><span className="font-semibold text-slate-900">Méthode :</span> {paymentMethodLabels[selectedProof.paymentMethod]}</p>
                       <p><span className="font-semibold text-slate-900">Référence transaction :</span> {selectedProof.referenceProvided ?? 'Non fournie'}</p>
-                      <p><span className="font-semibold text-slate-900">Statut preuve :</span> {proofStatusLabels[selectedProof.status]}</p>
+                      <p className="flex flex-wrap items-center gap-2">
+                        <span className="font-semibold text-slate-900">Statut preuve :</span>
+                        <AdminStatusBadge label={proofStatusLabels[selectedProof.status]} tone={getProofStatusTone(selectedProof.status)} />
+                      </p>
                       <p><span className="font-semibold text-slate-900">Date :</span> {new Date(selectedProof.createdAt).toLocaleString('fr-FR')}</p>
                       <p><span className="font-semibold text-slate-900">Fichier :</span> {selectedProof.originalFileName} ({formatFileSize(selectedProof.fileSize)})</p>
                     </div>
                   </div>
 
-                  <div className="rounded-3xl border border-slate-200 p-5">
-                    <h3 className="font-display text-xl font-semibold text-slate-900">Preuve fournie</h3>
-                    <div className="mt-4 overflow-hidden rounded-3xl border border-slate-200 bg-slate-50">
+                  <div className="rounded-[24px] border border-slate-200 bg-slate-50/60 p-4 sm:p-5">
+                    <h3 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">Preuve fournie</h3>
+                    <div className="mt-4 overflow-hidden rounded-[24px] border border-slate-200 bg-slate-50">
                       {selectedProof.mimeType === 'application/pdf' ? (
                         <iframe
                           src={selectedProof.fileUrl}
                           title={`Preuve ${selectedProof.originalFileName}`}
-                          className="h-[420px] w-full bg-white"
+                          className="h-[320px] w-full bg-white sm:h-[420px]"
                         />
                       ) : (
                         <img
                           src={selectedProof.fileUrl}
                           alt={`Preuve ${selectedProof.originalFileName}`}
-                          className="max-h-[420px] w-full object-contain bg-white"
+                          className="max-h-[320px] w-full object-contain bg-white sm:max-h-[420px]"
                         />
                       )}
                     </div>
@@ -373,9 +401,9 @@ const AdminPaymentProofsPage = () => {
                   </div>
                 </div>
 
-                <div className="grid gap-6 xl:grid-cols-2">
-                  <div className="rounded-3xl border border-emerald-100 bg-emerald-50 p-5">
-                    <h3 className="font-display text-xl font-semibold text-slate-900">Approuver</h3>
+                <div className="grid gap-4 xl:grid-cols-2 xl:gap-6">
+                  <div className="rounded-[24px] border border-emerald-100 bg-emerald-50 p-4 sm:p-5">
+                    <h3 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">Approuver</h3>
                     <p className="mt-2 text-sm text-slate-600">
                       Cette action confirme le don, approuve la preuve et marque le paiement comme complété.
                     </p>
@@ -387,7 +415,7 @@ const AdminPaymentProofsPage = () => {
                       placeholder="Note interne optionnelle de validation"
                     />
                     <Button
-                      className="mt-4 bg-emerald-600 hover:bg-emerald-700"
+                      className="mt-4 h-11 bg-emerald-600 hover:bg-emerald-700"
                       onClick={handleApprove}
                       disabled={selectedProof.status !== 'PENDING_REVIEW'}
                       isLoading={isApproving}
@@ -397,8 +425,8 @@ const AdminPaymentProofsPage = () => {
                     </Button>
                   </div>
 
-                  <div className="rounded-3xl border border-red-100 bg-red-50 p-5">
-                    <h3 className="font-display text-xl font-semibold text-slate-900">Rejeter</h3>
+                  <div className="rounded-[24px] border border-red-100 bg-red-50 p-4 sm:p-5">
+                    <h3 className="font-display text-lg font-semibold text-slate-900 sm:text-xl">Rejeter</h3>
                     <p className="mt-2 text-sm text-slate-600">
                       Une raison est obligatoire. Le donateur pourra envoyer une nouvelle preuve après rejet.
                     </p>
@@ -411,7 +439,7 @@ const AdminPaymentProofsPage = () => {
                     />
                     <Button
                       variant="secondary"
-                      className="mt-4 border-red-300 bg-white text-red-700 hover:bg-red-100"
+                      className="mt-4 h-11 border-red-300 bg-white text-red-700 hover:bg-red-100"
                       onClick={handleReject}
                       disabled={selectedProof.status !== 'PENDING_REVIEW'}
                       isLoading={isRejecting}

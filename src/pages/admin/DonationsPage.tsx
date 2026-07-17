@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { ChevronLeft, ChevronRight, ListFilter } from 'lucide-react'
 import AdminShell from '../../components/admin/AdminShell'
+import AdminCard from '../../components/admin/AdminCard'
 import LoadingSpinner from '../../components/common/LoadingSpinner'
 import DonationFilters from '../../components/donations/DonationFilters'
 import DonationTable from '../../components/donations/DonationTable'
@@ -48,7 +49,7 @@ const DonationsPage = () => {
       title="Tous les dons"
       description="Consultez la liste administrative des dons avec recherche, filtres et accès rapide à la fiche détaillée."
     >
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         <DonationFilters
           search={search}
           status={status}
@@ -96,40 +97,30 @@ const DonationsPage = () => {
           ]}
         />
 
-        <section className="rounded-3xl bg-white p-5 shadow-panel">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-orange-100 p-3 text-orange-600">
-                <ListFilter className="h-5 w-5" />
-              </div>
-              <div>
-                <h2 className="font-display text-xl font-semibold text-slate-900">Résultats</h2>
-                <p className="mt-1 text-sm text-slate-500">
-                  {data?.pagination.total ?? 0} don(s) trouvé(s){isFetching ? ' - actualisation...' : ''}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <AdminCard
+          icon={ListFilter}
+          title="Résultats"
+          description={`${data?.pagination.total ?? 0} don(s) trouvé(s)${isFetching ? ' - actualisation...' : ''}`}
+        />
 
         {isLoading && !data ? (
-          <section className="rounded-3xl bg-white p-6 shadow-panel">
+          <section className="rounded-[24px] border border-slate-200/80 bg-white p-6 shadow-panel">
             <LoadingSpinner className="justify-center py-10" />
           </section>
         ) : (
           <>
             <DonationTable donations={data?.items ?? []} />
 
-            <section className="flex flex-wrap items-center justify-between gap-3 rounded-3xl bg-white p-5 shadow-panel">
+            <section className="flex flex-col gap-4 rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-panel sm:flex-row sm:items-center sm:justify-between sm:p-5">
               <p className="text-sm text-slate-500">
                 Page {data?.pagination.page ?? page} sur {data?.pagination.totalPages ?? 1}
               </p>
-              <div className="flex gap-3">
+              <div className="grid grid-cols-2 gap-3 sm:flex">
                 <button
                   type="button"
                   onClick={() => setPage((current) => Math.max(1, current - 1))}
                   disabled={page <= 1}
-                  className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-orange-300 hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:border-orange-300 hover:bg-orange-50 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Précédent
@@ -138,7 +129,7 @@ const DonationsPage = () => {
                   type="button"
                   onClick={() => setPage((current) => current + 1)}
                   disabled={page >= (data?.pagination.totalPages ?? 1)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 text-sm font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   Suivant
                   <ChevronRight className="h-4 w-4" />

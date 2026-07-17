@@ -43,11 +43,13 @@ const DonationStatsCard = ({
         : 'bg-slate-100 text-slate-600'
 
   return (
-    <article className="rounded-3xl bg-white p-5 shadow-panel">
+    <article className="rounded-[24px] border border-slate-200/80 bg-white p-4 shadow-panel transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_18px_40px_rgba(15,23,42,0.12)] sm:p-5">
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className="text-sm font-medium text-slate-500">{title}</p>
-          <p className="mt-2 text-2xl font-bold text-slate-900">{formatValue(metric.current, valueFormat)}</p>
+          <p className="mt-2 break-words text-[1.65rem] font-bold leading-tight text-slate-900 sm:text-3xl">
+            {formatValue(metric.current, valueFormat)}
+          </p>
         </div>
         <div className="rounded-2xl bg-orange-100 p-3 text-orange-600">
           <Icon className="h-5 w-5" />
@@ -60,7 +62,7 @@ const DonationStatsCard = ({
           {metric.changePercentage >= 0 ? '+' : ''}
           {metric.changePercentage.toFixed(2)} %
         </span>
-        <span className="text-slate-500">
+        <span className="break-words text-slate-500">
           Période précédente: {formatValue(metric.previous, valueFormat)}
         </span>
       </div>

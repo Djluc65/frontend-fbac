@@ -1,5 +1,6 @@
 import { Filter, RotateCcw, Search } from 'lucide-react'
 import Button from '../common/Button'
+import AdminFilterPanel from '../admin/AdminFilterPanel'
 
 type Option = {
   label: string
@@ -36,19 +37,13 @@ const DonationFilters = ({
   proofStatusOptions,
 }: DonationFiltersProps) => {
   return (
-    <section className="rounded-3xl bg-white p-5 shadow-panel">
-      <div className="mb-4 flex items-center gap-3">
-        <div className="rounded-2xl bg-orange-100 p-3 text-orange-600">
-          <Filter className="h-5 w-5" />
-        </div>
-        <div>
-          <h2 className="font-display text-xl font-semibold text-slate-900">Recherche et filtres</h2>
-          <p className="mt-1 text-sm text-slate-500">Affinez la liste des dons par référence, statut ou mode de paiement.</p>
-        </div>
-      </div>
-
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.5fr)_repeat(3,minmax(0,1fr))_auto]">
-        <label className="space-y-2">
+    <AdminFilterPanel
+      icon={Filter}
+      title="Recherche et filtres"
+      description="Affinez la liste des dons par référence, statut, preuve ou mode de paiement."
+    >
+      <div className="grid gap-3 sm:gap-4 min-[430px]:grid-cols-2 xl:grid-cols-[minmax(0,1.5fr)_repeat(3,minmax(0,1fr))_auto]">
+        <label className="space-y-2 min-[430px]:col-span-2 xl:col-span-1">
           <span className="text-sm font-medium text-slate-700">Recherche</span>
           <div className="relative">
             <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -106,14 +101,14 @@ const DonationFilters = ({
           </select>
         </label>
 
-        <div className="flex items-end">
-          <Button variant="secondary" onClick={onReset} className="w-full lg:w-auto">
+        <div className="flex items-end min-[430px]:col-span-2 xl:col-span-1">
+          <Button variant="secondary" onClick={onReset} className="h-11 w-full xl:w-auto">
             <RotateCcw className="h-4 w-4" />
             Réinitialiser
           </Button>
         </div>
       </div>
-    </section>
+    </AdminFilterPanel>
   )
 }
 
