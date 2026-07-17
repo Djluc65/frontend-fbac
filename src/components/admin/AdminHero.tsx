@@ -29,9 +29,9 @@ const AdminHero = ({
   onOpenNavigation,
 }: AdminHeroProps) => {
   return (
-    <section className="overflow-hidden rounded-[28px] bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 p-4 text-white shadow-panel sm:p-6 lg:rounded-[32px] lg:p-8">
-      <div className="space-y-5">
-        <div className="flex flex-wrap items-start justify-between gap-3 lg:hidden">
+    <section className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700 p-4 text-white shadow-panel sm:rounded-3xl sm:p-6 lg:rounded-[32px] lg:p-8">
+      <div className="min-w-0 space-y-5">
+        <div className="flex min-w-0 flex-wrap items-start justify-between gap-3 lg:hidden">
           <button
             type="button"
             onClick={onOpenNavigation}
@@ -42,7 +42,7 @@ const AdminHero = ({
             Navigation
           </button>
 
-          <div className="flex flex-wrap items-center justify-end gap-2">
+          <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
             <Link
               to="/"
               className={`inline-flex items-center gap-1.5 ${actionButtonClassName} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-orange-600`}
@@ -57,8 +57,8 @@ const AdminHero = ({
           </div>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
-          <div className="space-y-4">
+        <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+          <div className="min-w-0 space-y-4">
             <div className="mx-auto flex w-full flex-col items-center text-center lg:mx-0 lg:items-start lg:text-left">
               <BrandLogo
                 to="/"
@@ -71,7 +71,7 @@ const AdminHero = ({
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="min-w-0 space-y-2">
               <h1 className="text-center font-display text-[22px] font-bold leading-tight text-white lg:text-left lg:text-4xl">
                 {title}
               </h1>
@@ -80,15 +80,15 @@ const AdminHero = ({
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-2 text-xs font-medium text-orange-50 lg:justify-start sm:text-sm">
+            <div className="flex min-w-0 flex-wrap items-center justify-center gap-2 text-xs font-medium text-orange-50 sm:text-sm lg:justify-start">
               {userName ? <span className="rounded-full bg-white/12 px-3 py-1.5">{userName}</span> : null}
               {userRole ? <span className="rounded-full bg-white/12 px-3 py-1.5 capitalize">{userRole}</span> : null}
             </div>
 
-            {actions ? <div className="lg:hidden">{actions}</div> : null}
+            {actions ? <div className="min-w-0 lg:hidden">{actions}</div> : null}
           </div>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden min-w-0 items-center gap-3 lg:flex">
             {actions}
             <Link
               to="/"

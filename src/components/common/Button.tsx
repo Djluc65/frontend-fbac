@@ -30,7 +30,8 @@ const Button = ({
     <button
       type={type}
       className={[
-        'inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition',
+        'inline-flex min-w-0 max-w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-center text-sm font-semibold transition',
+        'whitespace-normal break-words sm:whitespace-nowrap',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         'disabled:cursor-not-allowed disabled:opacity-60',
         variants[variant],

@@ -69,8 +69,8 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
           pathname={location.pathname}
         />
 
-        <main className="min-h-screen bg-slate-50 px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
-          <div className="mx-auto max-w-7xl space-y-4 sm:space-y-6">
+        <main className="min-h-screen w-full min-w-0 max-w-full overflow-x-hidden bg-slate-50 px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
+          <div className="mx-auto w-full min-w-0 max-w-7xl space-y-4 sm:space-y-6">
             <AdminHero
               title={title}
               description={description}
@@ -82,8 +82,11 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
               onOpenNavigation={() => setIsMobileSidebarOpen(true)}
             />
 
-            <section ref={contentSectionRef} className="grid gap-4 lg:grid-cols-[268px_minmax(0,1fr)] lg:gap-6">
-              <aside className="hidden h-fit rounded-[28px] border border-slate-200/80 bg-white p-4 shadow-panel lg:block">
+            <section
+              ref={contentSectionRef}
+              className="grid w-full min-w-0 max-w-full gap-4 lg:grid-cols-[268px_minmax(0,1fr)] lg:gap-6"
+            >
+              <aside className="hidden h-fit min-w-0 overflow-hidden rounded-[28px] border border-slate-200/80 bg-white p-4 shadow-panel lg:block">
                 <BrandLogo
                   to="/"
                   className="mb-5 hidden max-w-full justify-center px-2 lg:inline-flex"
@@ -124,7 +127,7 @@ const AdminShell = ({ title, description, children, actions }: AdminShellProps) 
                 </nav>
               </aside>
 
-              <section className="min-w-0">{children}</section>
+              <section className="w-full min-w-0 max-w-full overflow-x-hidden">{children}</section>
             </section>
           </div>
         </main>

@@ -581,9 +581,9 @@ const getErrorMessage = (error: unknown) => {
 }
 
 const SectionTitle = ({ title, description }: { title: string; description: string }) => (
-  <div className="mb-5">
-    <h2 className="font-display text-2xl font-semibold text-slate-900">{title}</h2>
-    <p className="mt-1 text-sm leading-6 text-slate-500">{description}</p>
+  <div className="mb-5 min-w-0">
+    <h2 className="break-words font-display text-xl font-semibold text-slate-900 sm:text-2xl">{title}</h2>
+    <p className="mt-1 break-words text-sm leading-6 text-slate-500">{description}</p>
   </div>
 )
 
@@ -593,14 +593,14 @@ const TextAreaField = ({
   rows = 4,
   ...props
 }: TextareaHTMLAttributes<HTMLTextAreaElement> & { label: string; hint?: string }) => (
-  <div className="space-y-2">
-    <label className="block text-sm font-medium text-slate-700">{label}</label>
+  <div className="w-full min-w-0 max-w-full space-y-2">
+    <label className="block break-words text-sm font-medium text-slate-700">{label}</label>
     <textarea
       rows={rows}
-      className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-100"
+      className="block w-full min-w-0 max-w-full resize-y overflow-x-auto break-words rounded-xl border border-slate-200 px-3 py-3 text-base text-slate-900 shadow-sm transition placeholder:text-slate-400 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-100 sm:px-4 sm:text-sm"
       {...props}
     />
-    {hint ? <p className="text-xs leading-5 text-slate-500">{hint}</p> : null}
+    {hint ? <p className="min-w-0 break-words text-xs leading-5 text-slate-500">{hint}</p> : null}
   </div>
 )
 
@@ -645,28 +645,31 @@ const ImageUploadPanel = ({
   }
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
-      <div className="flex items-start gap-3">
+    <div className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70 p-3 sm:p-4">
+      <div className="flex min-w-0 items-start gap-3">
         <div className="rounded-2xl bg-orange-100 p-2 text-orange-600">
           <ImagePlus className="h-5 w-5" />
         </div>
-        <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-slate-900">{title}</h3>
-          <p className="mt-1 text-xs leading-5 text-slate-500">{description}</p>
+        <div className="min-w-0 flex-1">
+          <h3 className="break-words text-sm font-semibold leading-5 text-slate-900">{title}</h3>
+          <p className="mt-1 break-words text-xs leading-5 text-slate-500">{description}</p>
         </div>
       </div>
 
-      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-4 flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <label
           htmlFor={id}
-          className={`inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition ${
+          className={`inline-flex w-full min-w-0 max-w-full cursor-pointer items-center justify-center gap-2 rounded-xl px-3 py-3 text-center text-sm font-semibold transition sm:w-auto sm:px-4 ${
             isBusy
               ? 'pointer-events-none bg-slate-200 text-slate-500'
               : 'bg-orange-500 text-white hover:bg-orange-600'
           }`}
         >
           {isUploading ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-          {isUploading ? 'Téléversement...' : 'Téléverser une image'}
+          <span className="min-w-0 truncate sm:hidden">{isUploading ? 'Téléversement...' : 'Téléverser'}</span>
+          <span className="hidden min-w-0 truncate sm:inline">
+            {isUploading ? 'Téléversement...' : 'Téléverser une image'}
+          </span>
         </label>
         <input
           id={id}
@@ -678,18 +681,20 @@ const ImageUploadPanel = ({
             void handleFileChange(event)
           }}
         />
-        <p className="text-xs leading-5 text-slate-500">JPG, PNG, WEBP, GIF ou SVG, 5 Mo maximum.</p>
+        <p className="min-w-0 break-words text-xs leading-5 text-slate-500">
+          JPG, PNG, WEBP, GIF ou SVG, 5 Mo maximum.
+        </p>
       </div>
 
       {imageUrl ? (
-        <div className="mt-4 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-          <img src={imageUrl} alt={previewAlt} className="h-44 w-full object-cover sm:h-52" />
+        <div className="mt-4 w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <img src={imageUrl} alt={previewAlt} className="block h-40 w-full max-w-full object-cover sm:h-52" />
           <div className="border-t border-slate-200 px-4 py-3">
-            <p className="truncate text-xs text-slate-500">{imageUrl}</p>
+            <p className="min-w-0 break-all text-xs leading-5 text-slate-500">{imageUrl}</p>
           </div>
         </div>
       ) : (
-        <div className="mt-4 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-6 text-center text-sm text-slate-500">
+        <div className="mt-4 w-full min-w-0 rounded-2xl border border-dashed border-slate-300 bg-white px-4 py-6 text-center text-sm text-slate-500">
           Aucune image sélectionnée pour le moment.
         </div>
       )}
@@ -796,7 +801,7 @@ const AdminContentPage = () => {
         title="Gestion du contenu"
         description="Modifiez les textes, sections et informations du site public depuis un seul écran."
       >
-        <div className="rounded-3xl bg-white p-8 shadow-panel">
+        <div className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl bg-white p-4 shadow-panel sm:rounded-3xl sm:p-6">
           <p className="text-sm leading-6 text-slate-600">
             Votre compte ne dispose pas de la permission <code>content.manage</code>.
           </p>
@@ -810,14 +815,23 @@ const AdminContentPage = () => {
       title="Gestion du contenu"
       description="Cette section pilote le contenu global du site public. Les campagnes et actualités restent gérées dans leurs modules dédiés."
       actions={
-        <Button type="submit" form="site-content-form" isLoading={isSaving || isLoading}>
+        <Button
+          type="submit"
+          form="site-content-form"
+          isLoading={isSaving || isLoading}
+          className="w-full sm:w-auto"
+        >
           <Save className="h-4 w-4" />
           Enregistrer tout le contenu
         </Button>
       }
     >
-      <form id="site-content-form" className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-        <section className="rounded-3xl bg-white p-6 shadow-panel">
+      <form
+        id="site-content-form"
+        className="w-full min-w-0 max-w-full space-y-4 pb-24 sm:space-y-6 lg:pb-0"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <section className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl bg-white p-4 shadow-panel sm:rounded-3xl sm:p-6">
           <div className="mb-4 inline-flex rounded-2xl bg-orange-100 p-3 text-orange-600">
             <FilePenLine className="h-6 w-6" />
           </div>
@@ -825,13 +839,13 @@ const AdminContentPage = () => {
             title="Header et footer"
             description="Modifiez le nom du site, les liens de navigation, le bouton de don et toutes les informations de bas de page."
           />
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Input label="Nom du site" id="navbarSiteName" {...register('navbarSiteName')} />
             <Input label="URL du logo (optionnel)" id="navbarLogoUrl" {...register('navbarLogoUrl')} />
             <Input label="Texte bouton don" id="navbarDonateLabel" {...register('navbarDonateLabel')} />
             <Input label="Lien bouton don" id="navbarDonateLink" {...register('navbarDonateLink')} />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 min-w-0">
             <TextAreaField
               label="Liens du menu"
               rows={5}
@@ -839,21 +853,21 @@ const AdminContentPage = () => {
               {...register('navbarLinksText')}
             />
           </div>
-          <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <div className="mt-6 grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Input label="Titre marque footer" id="footerBrandTitle" {...register('footerBrandTitle')} />
             <Input label="Copyright" id="footerCopyright" {...register('footerCopyright')} />
             <Input label="Adresse" id="footerAddress" {...register('footerAddress')} />
             <Input label="Téléphone" id="footerPhone" {...register('footerPhone')} />
             <Input label="Email" id="footerEmail" {...register('footerEmail')} />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 min-w-0">
             <TextAreaField
               label="Description footer"
               rows={3}
               {...register('footerDescription')}
             />
           </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
             <TextAreaField
               label="Réseaux sociaux"
               rows={4}
@@ -881,12 +895,12 @@ const AdminContentPage = () => {
           </div>
         </section>
 
-        <section className="rounded-3xl bg-white p-6 shadow-panel">
+        <section className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl bg-white p-4 shadow-panel sm:rounded-3xl sm:p-6">
           <SectionTitle
             title="Accueil"
             description="Modifiez le hero, les statistiques, l'introduction des programmes, le CTA et la zone de confiance."
           />
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Input label="SEO titre" id="homeSeoTitle" {...register('homeSeoTitle')} />
             <Input label="SEO description" id="homeSeoDescription" {...register('homeSeoDescription')} />
             <Input label="Titre hero avant mise en évidence" id="homeHeroTitlePrefix" {...register('homeHeroTitlePrefix')} />
@@ -898,7 +912,7 @@ const AdminContentPage = () => {
             <Input label="URL image hero" id="homeHeroImageUrl" {...register('homeHeroImageUrl')} />
             <Input label="Alt image hero" id="homeHeroImageAlt" {...register('homeHeroImageAlt')} />
           </div>
-          <div className="mt-4 grid gap-4 xl:grid-cols-2">
+          <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 xl:grid-cols-2">
             <ImageUploadPanel
               id="home-hero-upload"
               title="Téléverser l'image hero"
@@ -924,10 +938,10 @@ const AdminContentPage = () => {
               }
             />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 min-w-0">
             <TextAreaField label="Description hero" rows={3} {...register('homeHeroDescription')} />
           </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
             <TextAreaField
               label="Statistiques"
               rows={4}
@@ -941,7 +955,7 @@ const AdminContentPage = () => {
               {...register('homeProgramsItemsText')}
             />
           </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Input label="Titre section programmes" id="homeProgramsTitle" {...register('homeProgramsTitle')} />
             <Input label="Description section programmes" id="homeProgramsDescription" {...register('homeProgramsDescription')} />
             <Input label="Titre section campagnes" id="homeCampaignsTitle" {...register('homeCampaignsTitle')} />
@@ -962,7 +976,7 @@ const AdminContentPage = () => {
             <Input label="Lien rapports" id="homeTrustReportLink" {...register('homeTrustReportLink')} />
             <Input label="Texte de secours statistiques" id="homeStatsDisclaimer" {...register('homeStatsDisclaimer')} />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 min-w-0">
             <TextAreaField
               label="Arguments de confiance"
               rows={5}
@@ -972,12 +986,12 @@ const AdminContentPage = () => {
           </div>
         </section>
 
-        <section className="rounded-3xl bg-white p-6 shadow-panel">
+        <section className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl bg-white p-4 shadow-panel sm:rounded-3xl sm:p-6">
           <SectionTitle
             title="À propos et équipe"
             description="C'est ici que l'administrateur modifie les textes de la rubrique Notre équipe, l'histoire, la mission, la vision et les valeurs."
           />
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Input label="SEO titre" id="aboutSeoTitle" {...register('aboutSeoTitle')} />
             <Input label="SEO description" id="aboutSeoDescription" {...register('aboutSeoDescription')} />
             <Input label="Titre hero" id="aboutHeroTitle" {...register('aboutHeroTitle')} />
@@ -994,7 +1008,7 @@ const AdminContentPage = () => {
             <Input label="Titre équipe" id="aboutTeamTitle" {...register('aboutTeamTitle')} />
             <Input label="Description équipe" id="aboutTeamDescription" {...register('aboutTeamDescription')} />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 min-w-0">
             <ImageUploadPanel
               id="about-story-upload"
               title="Téléverser l'image de l'histoire"
@@ -1008,7 +1022,7 @@ const AdminContentPage = () => {
               }
             />
           </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
             <TextAreaField
               label="Paragraphes histoire"
               rows={6}
@@ -1023,42 +1037,50 @@ const AdminContentPage = () => {
             />
           </div>
           <input type="hidden" {...register('aboutTeamText')} />
-          <div className="mt-6 space-y-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
+          <div className="mt-6 min-w-0 space-y-4">
+            <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
                 <h3 className="text-base font-semibold text-slate-900">Membres de l'équipe</h3>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 break-words text-sm text-slate-500">
                   Ajoutez les membres un par un et téléversez leur photo directement ici.
                 </p>
               </div>
-              <Button type="button" variant="secondary" onClick={handleAddTeamMember}>
+              <Button type="button" variant="secondary" onClick={handleAddTeamMember} className="w-full sm:w-auto">
                 <Plus className="h-4 w-4" />
                 Ajouter un membre
               </Button>
             </div>
 
             {teamMembers.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
+              <div className="w-full min-w-0 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-6 text-sm text-slate-500">
                 Aucun membre n'est encore configuré. Cliquez sur "Ajouter un membre" pour commencer.
               </div>
             ) : null}
 
             {teamMembers.map((member, index) => (
-              <div key={`${member.name}-${index}`} className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div>
+              <div
+                key={`${member.name}-${index}`}
+                className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl border border-slate-200 bg-slate-50/70 p-3 sm:p-4"
+              >
+                <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
                     <h4 className="text-sm font-semibold text-slate-900">Membre {index + 1}</h4>
-                    <p className="mt-1 text-xs text-slate-500">
+                    <p className="mt-1 break-words text-xs text-slate-500">
                       Renseignez le nom, le rôle et la photo de cette personne.
                     </p>
                   </div>
-                  <Button type="button" variant="ghost" className="text-red-600 hover:bg-red-50 hover:text-red-700" onClick={() => handleRemoveTeamMember(index)}>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    className="w-full text-red-600 hover:bg-red-50 hover:text-red-700 sm:w-auto"
+                    onClick={() => handleRemoveTeamMember(index)}
+                  >
                     <Trash2 className="h-4 w-4" />
                     Supprimer
                   </Button>
                 </div>
 
-                <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-3">
                   <Input
                     label="Nom"
                     id={`team-name-${index}`}
@@ -1079,7 +1101,7 @@ const AdminContentPage = () => {
                   />
                 </div>
 
-                <div className="mt-4 grid gap-4 xl:grid-cols-[minmax(0,1fr)_240px]">
+                <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_240px]">
                   <ImageUploadPanel
                     id={`team-upload-${index}`}
                     title={`Téléverser la photo du membre ${index + 1}`}
@@ -1090,15 +1112,15 @@ const AdminContentPage = () => {
                     isBusy={isUploadingImage}
                     onUpload={(file) => handleTeamImageUpload(index, file)}
                   />
-                  <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                  <div className="w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white">
                     {member.imageUrl ? (
                       <img
                         src={member.imageUrl}
                         alt={member.name || `Photo du membre ${index + 1}`}
-                        className="h-full min-h-[220px] w-full object-cover"
+                        className="block h-48 w-full max-w-full object-cover sm:h-56 xl:h-full xl:min-h-[220px]"
                       />
                     ) : (
-                      <div className="flex h-full min-h-[220px] items-center justify-center px-4 text-center text-sm text-slate-500">
+                      <div className="flex h-48 w-full items-center justify-center px-4 text-center text-sm text-slate-500 sm:h-56 xl:h-full xl:min-h-[220px]">
                         L'aperçu de la photo apparaîtra ici.
                       </div>
                     )}
@@ -1107,11 +1129,11 @@ const AdminContentPage = () => {
               </div>
             ))}
 
-            <details className="rounded-2xl border border-slate-200 bg-white p-4">
+            <details className="w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4">
               <summary className="cursor-pointer text-sm font-medium text-slate-700">
                 Mode avancé : modifier la liste brute
               </summary>
-              <div className="mt-4">
+              <div className="mt-4 min-w-0">
                 <TextAreaField
                   label="Notre équipe"
                   rows={6}
@@ -1126,19 +1148,19 @@ const AdminContentPage = () => {
           </div>
         </section>
 
-        <section className="rounded-3xl bg-white p-6 shadow-panel">
+        <section className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl bg-white p-4 shadow-panel sm:rounded-3xl sm:p-6">
           <SectionTitle
             title="Programmes, contact et transparence"
             description="Gérez les pages d'information du site public."
           />
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Input label="SEO programmes" id="programsSeoTitle" {...register('programsSeoTitle')} />
             <Input label="Description SEO programmes" id="programsSeoDescription" {...register('programsSeoDescription')} />
             <Input label="Titre hero programmes" id="programsHeroTitle" {...register('programsHeroTitle')} />
             <Input label="Description hero programmes" id="programsHeroDescription" {...register('programsHeroDescription')} />
             <Input label="Titre impact programmes" id="programsImpactTitle" {...register('programsImpactTitle')} />
           </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
             <TextAreaField
               label="Liste des programmes"
               rows={8}
@@ -1176,7 +1198,7 @@ const AdminContentPage = () => {
               {...register('transparencyReportsText')}
             />
           </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-2">
+          <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Input label="SEO contact" id="contactSeoTitle" {...register('contactSeoTitle')} />
             <Input label="Description SEO contact" id="contactSeoDescription" {...register('contactSeoDescription')} />
             <Input label="Titre hero contact" id="contactHeroTitle" {...register('contactHeroTitle')} />
@@ -1204,7 +1226,7 @@ const AdminContentPage = () => {
             <Input label="Description rapports" id="transparencyReportsDescription" {...register('transparencyReportsDescription')} />
             <Input label="Texte secours stats transparence" id="transparencyStatsDisclaimer" {...register('transparencyStatsDisclaimer')} />
           </div>
-          <div className="mt-4">
+          <div className="mt-4 min-w-0">
             <TextAreaField
               label="Statistiques transparence"
               rows={4}
@@ -1214,12 +1236,12 @@ const AdminContentPage = () => {
           </div>
         </section>
 
-        <section className="rounded-3xl bg-white p-6 shadow-panel">
+        <section className="w-full min-w-0 max-w-full overflow-hidden rounded-2xl bg-white p-4 shadow-panel sm:rounded-3xl sm:p-6">
           <SectionTitle
             title="Dons, campagnes, actualités et paramètres"
             description="Réglez les libellés de la page de don, les héro de campagnes/actualités et les paramètres généraux du site."
           />
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2">
             <Input label="SEO dons" id="donateSeoTitle" {...register('donateSeoTitle')} />
             <Input label="Description SEO dons" id="donateSeoDescription" {...register('donateSeoDescription')} />
             <Input label="Titre hero dons" id="donateHeroTitle" {...register('donateHeroTitle')} />
@@ -1247,7 +1269,7 @@ const AdminContentPage = () => {
             <Input label="Langue par défaut" id="settingsDefaultLanguage" {...register('settingsDefaultLanguage')} />
             <Input label="Langues supportées" id="settingsSupportedLanguagesText" {...register('settingsSupportedLanguagesText')} />
           </div>
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="mt-4 grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
             <TextAreaField
               label="Montants prédéfinis"
               rows={2}
@@ -1263,6 +1285,16 @@ const AdminContentPage = () => {
           </div>
         </section>
       </form>
+
+      <div
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 p-3 backdrop-blur lg:hidden"
+        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+      >
+        <Button type="submit" form="site-content-form" fullWidth isLoading={isSaving || isLoading}>
+          <Save className="h-4 w-4" />
+          Enregistrer tout le contenu
+        </Button>
+      </div>
     </AdminShell>
   )
 }

@@ -11,11 +11,11 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, hint, leftIcon, rightElement, className = '', id, ...props }, ref) => {
     return (
-      <div className="space-y-2">
-        <label htmlFor={id} className="block text-sm font-medium text-slate-700">
+      <div className="w-full min-w-0 max-w-full space-y-2">
+        <label htmlFor={id} className="block break-words text-sm font-medium text-slate-700">
           {label}
         </label>
-        <div className="relative">
+        <div className="relative w-full min-w-0 max-w-full">
           {leftIcon ? (
             <div className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
               {leftIcon}
@@ -25,7 +25,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             id={id}
             className={[
-              'w-full rounded-xl border bg-white px-4 py-3 text-slate-900 shadow-sm transition',
+              'block w-full min-w-0 max-w-full rounded-xl border bg-white px-3 py-3 text-base text-slate-900 shadow-sm transition sm:px-4 sm:text-sm',
+              'overflow-x-auto',
               'placeholder:text-slate-400 focus:border-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-100',
               leftIcon ? 'pl-12' : '',
               rightElement ? 'pr-12' : '',

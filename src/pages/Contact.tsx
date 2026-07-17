@@ -85,7 +85,7 @@ const Contact = () => {
 
               <ContactLinks
                 contactInfo={contactInfo}
-                className="grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-3"
+                desktopLayout="rows"
               />
             </motion.div>
 
