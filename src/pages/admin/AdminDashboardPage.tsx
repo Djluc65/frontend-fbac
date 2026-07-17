@@ -1,175 +1,109 @@
 import {
-  FilePenLine,
+  BadgeCheck,
   FolderKanban,
-  HandCoins,
-  Megaphone,
-  Newspaper,
   ShieldCheck,
+  Sparkles,
   UserCircle2,
-  WalletCards,
 } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import AdminShell from '../../components/admin/AdminShell'
+import AdminCard from '../../components/admin/AdminCard'
+import AdminQuickActions from '../../components/admin/AdminQuickActions'
+import { getAdminQuickAccessNavigation } from '../../components/admin/adminNavigation'
+import { getAdminCapabilities } from '../../components/admin/adminPermissions'
 import { useAppSelector } from '../../app/hooks'
 import { selectCurrentUser } from '../../features/auth/authSelectors'
-
-const hasPermission = (permissions: string[] | undefined, required: string[]) => {
-  if (!permissions?.length) {
-    return false
-  }
-
-  if (permissions.includes('*')) {
-    return true
-  }
-
-  return required.some((permission) => permissions.includes(permission))
-}
 
 const AdminDashboardPage = () => {
   const user = useAppSelector(selectCurrentUser)
   const permissions = user?.permissions ?? []
-  const canManageCampaigns = hasPermission(permissions, ['campaigns.manage'])
-  const canManagePublications = hasPermission(permissions, ['news.create', 'news.update', 'news.delete'])
-  const canManageContent = hasPermission(permissions, ['content.manage'])
-  const canManagePayments = hasPermission(permissions, ['donations.manage', 'donations.read'])
-
-  const quickAccess = [
-    {
-      title: 'Gérer le contenu du site',
-      description: 'Modifier les textes, la rubrique Notre équipe, le footer, le header et les pages statiques du site public.',
-      to: '/admin/contenu',
-      icon: FilePenLine,
-      visible: canManageContent,
-    },
-    {
-      title: 'Gérer les campagnes',
-      description: 'Créer, modifier et supprimer les campagnes de collecte avec image, montant cible et dates.',
-      to: '/admin/campagnes',
-      icon: Megaphone,
-      visible: canManageCampaigns,
-    },
-    {
-      title: 'Gérer les publications',
-      description: 'Rédiger des publications, les garder en brouillon ou les publier avec image principale.',
-      to: '/admin/publications',
-      icon: Newspaper,
-      visible: canManagePublications,
-    },
-    {
-      title: 'Vue d’ensemble des dons',
-      description: 'Accéder aux indicateurs de collecte, à l’activité récente et aux cartes statistiques du module dons.',
-      to: '/admin/donations/dashboard',
-      icon: HandCoins,
-      visible: canManagePayments,
-    },
-    {
-      title: 'Gérer les paiements',
-      description: 'Activer ou désactiver les moyens de paiement et configurer leurs instructions publiques.',
-      to: '/admin/paiements',
-      icon: WalletCards,
-      visible: canManagePayments,
-    },
-    {
-      title: 'Paiements à vérifier',
-      description: 'Consulter les preuves de virement, Zelle et Cash App puis approuver ou rejeter chaque paiement manuel.',
-      to: '/admin/paiements/verifications',
-      icon: ShieldCheck,
-      visible: canManagePayments,
-    },
-  ].filter((item) => item.visible)
+  const capabilities = getAdminCapabilities(permissions)
+  const quickAccess = getAdminQuickAccessNavigation(capabilities)
 
   return (
     <AdminShell
       title="Tableau de bord administrateur"
       description="Pilotez le contenu éditorial et les campagnes de la fondation depuis une interface centralisée."
     >
-      <div className="space-y-6">
-        <section className="grid gap-6 xl:grid-cols-[minmax(0,1.1fr)_minmax(320px,0.9fr)]">
-          <article className="rounded-3xl bg-white p-6 shadow-panel">
-            <div className="mb-4 inline-flex rounded-2xl bg-orange-100 p-3 text-orange-600">
-              <UserCircle2 className="h-6 w-6" />
-            </div>
-            <h2 className="font-display text-xl font-semibold text-slate-900">Session active</h2>
-            <dl className="mt-4 space-y-3 text-sm text-slate-600">
-              <div>
-                <dt className="font-medium text-slate-900">Nom</dt>
-                <dd>
+      <div className="space-y-4 sm:space-y-6">
+        <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.92fr)]">
+          <AdminCard
+            icon={UserCircle2}
+            title="Session active"
+            description="Vos informations d’accès sont visibles ici pour un contrôle rapide."
+          >
+            <dl className="grid gap-3 text-sm text-slate-600">
+              <div className="rounded-2xl bg-slate-50 px-4 py-3">
+                <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Nom</dt>
+                <dd className="mt-1 break-words font-medium text-slate-900">
                   {user?.firstName} {user?.lastName}
                 </dd>
               </div>
-              <div>
-                <dt className="font-medium text-slate-900">Email</dt>
-                <dd>{user?.email}</dd>
+              <div className="rounded-2xl bg-slate-50 px-4 py-3">
+                <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Email</dt>
+                <dd className="mt-1 break-words font-medium text-slate-900">{user?.email}</dd>
               </div>
-              <div>
-                <dt className="font-medium text-slate-900">Rôle</dt>
-                <dd>{user?.role}</dd>
+              <div className="rounded-2xl bg-slate-50 px-4 py-3">
+                <dt className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Rôle</dt>
+                <dd className="mt-1 font-medium capitalize text-slate-900">{user?.role}</dd>
               </div>
             </dl>
-          </article>
+          </AdminCard>
 
-          <article className="rounded-3xl bg-white p-6 shadow-panel">
-            <div className="mb-4 inline-flex rounded-2xl bg-orange-100 p-3 text-orange-600">
-              <ShieldCheck className="h-6 w-6" />
-            </div>
-            <h2 className="font-display text-xl font-semibold text-slate-900">Permissions actives</h2>
-            <div className="mt-4 flex flex-wrap gap-2">
-              {permissions.length > 0 ? (
-                permissions.map((permission) => (
+          <AdminCard
+            icon={ShieldCheck}
+            title="Permissions actives"
+            description="Les modules affichés s’adaptent automatiquement à votre niveau d’accès."
+          >
+            {permissions.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {permissions.map((permission) => (
                   <span
                     key={permission}
-                    className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-600"
+                    className="inline-flex items-center gap-2 rounded-full bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700"
                   >
+                    <BadgeCheck className="h-[18px] w-[18px]" />
                     {permission}
                   </span>
-                ))
-              ) : (
-                <p className="text-sm text-slate-500">Aucune permission spécifique remontée.</p>
-              )}
-            </div>
-          </article>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm leading-6 text-slate-500">Aucune permission spécifique remontée.</p>
+            )}
+          </AdminCard>
         </section>
 
-        <section className="rounded-3xl bg-white p-6 shadow-panel">
-          <div className="mb-6 flex items-center gap-3">
-            <FolderKanban className="h-5 w-5 text-orange-500" />
-            <div>
-              <h2 className="font-display text-2xl font-semibold text-slate-900">Accès rapide</h2>
-              <p className="mt-1 text-sm text-slate-500">
-                Ouvrez directement les modules de gestion disponibles pour votre profil.
+        <AdminCard
+          icon={Sparkles}
+          title="Vue d’ensemble"
+          description="Une interface mobile plus compacte pour piloter les modules essentiels sans perdre les actions importantes."
+          className="bg-gradient-to-r from-white via-orange-50/40 to-white"
+        >
+          <div className="grid gap-3 min-[430px]:grid-cols-2 xl:grid-cols-3">
+            <div className="rounded-[20px] border border-slate-200 bg-white px-4 py-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Modules visibles</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{quickAccess.length}</p>
+            </div>
+            <div className="rounded-[20px] border border-slate-200 bg-white px-4 py-3">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Permissions</p>
+              <p className="mt-2 text-2xl font-bold text-slate-900">{permissions.length}</p>
+            </div>
+            <div className="rounded-[20px] border border-slate-200 bg-white px-4 py-3 min-[430px]:col-span-2 xl:col-span-1">
+              <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                <FolderKanban className="h-[18px] w-[18px] text-orange-500" />
+                Focus
+              </div>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Accédez rapidement aux modules éditoriaux, paiements et statistiques.
               </p>
             </div>
           </div>
+        </AdminCard>
 
-          {quickAccess.length === 0 ? (
-            <p className="text-sm leading-6 text-slate-600">
-              Votre compte dispose d'un accès au tableau de bord, mais aucun module éditorial n'est encore activé.
-            </p>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2">
-              {quickAccess.map((item) => {
-                const Icon = item.icon
-
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className="rounded-3xl border border-slate-200 p-5 transition hover:border-orange-300 hover:bg-orange-50"
-                  >
-                    <div className="mb-4 inline-flex rounded-2xl bg-orange-100 p-3 text-orange-600">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <h3 className="font-display text-xl font-semibold text-slate-900">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">{item.description}</p>
-                    <span className="mt-4 inline-flex text-sm font-semibold text-orange-600">
-                      Ouvrir le module
-                    </span>
-                  </Link>
-                )
-              })}
-            </div>
-          )}
-        </section>
+        <AdminQuickActions
+          title="Accès rapide"
+          description="Ouvrez directement les modules les plus utiles pour votre profil, avec une grille pensée pour le smartphone."
+          items={quickAccess}
+        />
       </div>
     </AdminShell>
   )

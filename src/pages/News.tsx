@@ -45,43 +45,45 @@ const News = () => {
       <section className="py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {news.map((item, index) => (
-              <motion.article
-                key={item._id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="group overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-xl"
-              >
-                <div className="relative overflow-hidden">
-                  <ResilientImage
-                    src={item.image}
-                    alt={item.title}
-                    className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    fallbackClassName="h-48 w-full"
-                    fallbackLabel="Image de l'actualité indisponible"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="mb-3 flex items-center gap-2 text-sm text-gray-500">
-                    <Calendar className="h-4 w-4" />
-                    {formatDate(item.createdAt)}
+            {news.map((item, index) => {
+              return (
+                <motion.article
+                  key={item._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="group overflow-hidden rounded-2xl bg-white shadow-md transition-all hover:shadow-xl"
+                >
+                  <div className="relative overflow-hidden">
+                    <ResilientImage
+                      src={item.image}
+                      alt={item.title}
+                      className="h-48 w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      fallbackClassName="h-48 w-full"
+                      fallbackLabel="Image de l'actualité indisponible"
+                    />
                   </div>
-                  <h2 className="mb-3 font-display text-xl font-semibold text-soft-black transition-colors group-hover:text-orange-500">
-                    {item.title}
-                  </h2>
-                  <p className="mb-4 text-gray-600">{item.excerpt}</p>
-                  <Link
-                    to="#"
-                    className="inline-flex items-center gap-2 font-semibold text-orange-500 hover:text-orange-600"
-                  >
-                    {content.newsPage.readMoreLabel}
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </motion.article>
-            ))}
+                  <div className="p-6">
+                    <div className="mb-3 flex items-center gap-2 text-sm text-gray-500">
+                      <Calendar className="h-4 w-4" />
+                      {formatDate(item.createdAt)}
+                    </div>
+                    <h2 className="mb-3 font-display text-xl font-semibold text-soft-black transition-colors group-hover:text-orange-500">
+                      {item.title}
+                    </h2>
+                    <p className="mb-4 text-gray-600">{item.excerpt}</p>
+                    <Link
+                      to={`/actualites/${item._id}`}
+                      className="inline-flex items-center gap-2 font-semibold text-orange-500 transition hover:text-orange-600"
+                    >
+                      {content.newsPage.readMoreLabel}
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </motion.article>
+              )
+            })}
           </div>
         </div>
       </section>

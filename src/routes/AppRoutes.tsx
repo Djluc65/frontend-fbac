@@ -6,6 +6,7 @@ import Contact from '../pages/Contact'
 import Donate from '../pages/Donate'
 import Home from '../pages/Home'
 import News from '../pages/News'
+import NewsDetail from '../pages/NewsDetail'
 import Programs from '../pages/Programs'
 import Transparency from '../pages/Transparency'
 import Login from '../pages/auth/Login'
@@ -73,6 +74,7 @@ const AppRoutes = () => {
         <Route path="programmes" element={<Programs />} />
         <Route path="campagnes" element={<Campaigns />} />
         <Route path="actualites" element={<News />} />
+        <Route path="actualites/:id" element={<NewsDetail />} />
         <Route path="contact" element={<Contact />} />
         <Route path="transparence" element={<Transparency />} />
         <Route path="faire-un-don" element={<Donate />} />
