@@ -46,7 +46,7 @@ const Navbar = () => {
               loading="eager"
               className="h-10 w-auto flex-shrink-0 object-contain sm:h-12 lg:h-14 xl:h-16"
             />
-            <span className="hidden min-w-0 font-display text-sm font-bold leading-tight text-orange-500 sm:block lg:text-base xl:text-lg">
+            <span className="min-w-0 font-display text-xs font-bold leading-tight text-orange-500 sm:text-sm lg:text-base xl:text-lg">
               {content.navbar.siteName}
             </span>
           </Link>
